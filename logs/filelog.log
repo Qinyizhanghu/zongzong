@@ -1,2 +1,80 @@
 2020-01-05 11:44:19,399 INFO autoreload.run_with_reloader Line:578  Watching for file changes with StatReloader
 2020-01-05 11:44:19,399 INFO autoreload.run_with_reloader Line:578  Watching for file changes with StatReloader
+2020-04-11 13:46:21,909 INFO autoreload.run_with_reloader Line:578  Watching for file changes with StatReloader
+2020-04-11 13:46:21,909 INFO autoreload.run_with_reloader Line:578  Watching for file changes with StatReloader
+2020-04-11 13:46:50,141 INFO autoreload.run_with_reloader Line:578  Watching for file changes with StatReloader
+2020-04-11 13:46:50,141 INFO autoreload.run_with_reloader Line:578  Watching for file changes with StatReloader
+2020-04-11 13:47:12,787 INFO autoreload.run_with_reloader Line:578  Watching for file changes with StatReloader
+2020-04-11 13:47:12,787 INFO autoreload.run_with_reloader Line:578  Watching for file changes with StatReloader
+2020-04-11 13:47:51,018 INFO autoreload.run_with_reloader Line:578  Watching for file changes with StatReloader
+2020-04-11 13:47:51,018 INFO autoreload.run_with_reloader Line:578  Watching for file changes with StatReloader
+2020-04-11 13:48:19,723 INFO autoreload.run_with_reloader Line:578  Watching for file changes with StatReloader
+2020-04-11 13:48:19,723 INFO autoreload.run_with_reloader Line:578  Watching for file changes with StatReloader
+2020-04-11 13:48:43,311 INFO autoreload.run_with_reloader Line:578  Watching for file changes with StatReloader
+2020-04-11 13:48:43,311 INFO autoreload.run_with_reloader Line:578  Watching for file changes with StatReloader
+2020-04-11 13:51:57,182 INFO autoreload.run_with_reloader Line:578  Watching for file changes with StatReloader
+2020-04-11 13:51:57,182 INFO autoreload.run_with_reloader Line:578  Watching for file changes with StatReloader
+2020-04-11 13:55:08,710 INFO autoreload.run_with_reloader Line:578  Watching for file changes with StatReloader
+2020-04-11 13:55:08,710 INFO autoreload.run_with_reloader Line:578  Watching for file changes with StatReloader
+2020-04-11 13:56:01,749 INFO autoreload.run_with_reloader Line:578  Watching for file changes with StatReloader
+2020-04-11 13:56:01,749 INFO autoreload.run_with_reloader Line:578  Watching for file changes with StatReloader
+2020-04-11 13:56:52,292 INFO autoreload.run_with_reloader Line:578  Watching for file changes with StatReloader
+2020-04-11 13:56:52,292 INFO autoreload.run_with_reloader Line:578  Watching for file changes with StatReloader
+2020-04-11 14:02:41,793 INFO autoreload.run_with_reloader Line:578  Watching for file changes with StatReloader
+2020-04-11 14:02:41,793 INFO autoreload.run_with_reloader Line:578  Watching for file changes with StatReloader
+2020-04-11 14:08:42,558 INFO autoreload.run_with_reloader Line:578  Watching for file changes with StatReloader
+2020-04-11 14:08:42,558 INFO autoreload.run_with_reloader Line:578  Watching for file changes with StatReloader
+2020-04-11 14:11:13,080 INFO autoreload.run_with_reloader Line:578  Watching for file changes with StatReloader
+2020-04-11 14:11:13,080 INFO autoreload.run_with_reloader Line:578  Watching for file changes with StatReloader
+2020-04-11 14:15:07,858 INFO autoreload.run_with_reloader Line:578  Watching for file changes with StatReloader
+2020-04-11 14:15:07,858 INFO autoreload.run_with_reloader Line:578  Watching for file changes with StatReloader
+2020-04-11 14:15:24,978 INFO basehttp.log_message Line:154  "GET / HTTP/1.1" 200 23
+2020-04-11 14:15:24,978 INFO basehttp.log_message Line:154  "GET / HTTP/1.1" 200 23
+2020-04-11 14:15:25,478 WARNING basehttp.log_message Line:154  "GET /favicon.ico HTTP/1.1" 404 2837
+2020-04-11 14:15:25,478 WARNING basehttp.log_message Line:154  "GET /favicon.ico HTTP/1.1" 404 2837
+2020-04-11 14:15:33,197 INFO basehttp.log_message Line:154  "GET /admin HTTP/1.1" 301 0
+2020-04-11 14:15:33,197 INFO basehttp.log_message Line:154  "GET /admin HTTP/1.1" 301 0
+2020-04-11 14:15:33,258 INFO basehttp.log_message Line:154  "GET /admin/ HTTP/1.1" 302 0
+2020-04-11 14:15:33,258 INFO basehttp.log_message Line:154  "GET /admin/ HTTP/1.1" 302 0
+2020-04-11 14:15:33,396 INFO basehttp.log_message Line:154  "GET /admin/login/?next=/admin/ HTTP/1.1" 200 1821
+2020-04-11 14:15:33,396 INFO basehttp.log_message Line:154  "GET /admin/login/?next=/admin/ HTTP/1.1" 200 1821
+2020-04-11 14:15:33,458 INFO basehttp.log_message Line:154  "GET /static/admin/css/base.css HTTP/1.1" 200 16378
+2020-04-11 14:15:33,458 INFO basehttp.log_message Line:154  "GET /static/admin/css/base.css HTTP/1.1" 200 16378
+2020-04-11 14:15:33,459 INFO basehttp.log_message Line:154  "GET /static/admin/css/login.css HTTP/1.1" 200 1233
+2020-04-11 14:15:33,459 INFO basehttp.log_message Line:154  "GET /static/admin/css/login.css HTTP/1.1" 200 1233
+2020-04-11 14:15:33,461 INFO basehttp.log_message Line:154  "GET /static/admin/css/responsive.css HTTP/1.1" 200 17944
+2020-04-11 14:15:33,461 INFO basehttp.log_message Line:154  "GET /static/admin/css/responsive.css HTTP/1.1" 200 17944
+2020-04-11 14:15:33,477 INFO basehttp.log_message Line:154  "GET /static/admin/css/fonts.css HTTP/1.1" 200 423
+2020-04-11 14:15:33,477 INFO basehttp.log_message Line:154  "GET /static/admin/css/fonts.css HTTP/1.1" 200 423
+2020-04-11 14:15:33,580 INFO basehttp.log_message Line:154  "GET /static/admin/fonts/Roboto-Regular-webfont.woff HTTP/1.1" 200 85876
+2020-04-11 14:15:33,580 INFO basehttp.log_message Line:154  "GET /static/admin/fonts/Roboto-Regular-webfont.woff HTTP/1.1" 200 85876
+2020-04-11 14:15:33,588 INFO basehttp.log_message Line:154  "GET /static/admin/fonts/Roboto-Light-webfont.woff HTTP/1.1" 200 85692
+2020-04-11 14:15:33,588 INFO basehttp.log_message Line:154  "GET /static/admin/fonts/Roboto-Light-webfont.woff HTTP/1.1" 200 85692
+2020-04-11 14:33:11,863 INFO autoreload.run_with_reloader Line:578  Watching for file changes with StatReloader
+2020-04-11 14:33:11,863 INFO autoreload.run_with_reloader Line:578  Watching for file changes with StatReloader
+2020-04-11 14:33:58,342 INFO autoreload.run_with_reloader Line:578  Watching for file changes with StatReloader
+2020-04-11 14:33:58,342 INFO autoreload.run_with_reloader Line:578  Watching for file changes with StatReloader
+2020-04-11 17:59:50,501 INFO autoreload.run_with_reloader Line:578  Watching for file changes with StatReloader
+2020-04-11 17:59:50,501 INFO autoreload.run_with_reloader Line:578  Watching for file changes with StatReloader
+2020-04-11 18:00:01,545 INFO basehttp.log_message Line:154  "GET / HTTP/1.1" 200 23
+2020-04-11 18:00:01,545 INFO basehttp.log_message Line:154  "GET / HTTP/1.1" 200 23
+2020-04-11 18:00:08,536 INFO basehttp.log_message Line:154  "GET /admin/ HTTP/1.1" 302 0
+2020-04-11 18:00:08,536 INFO basehttp.log_message Line:154  "GET /admin/ HTTP/1.1" 302 0
+2020-04-11 18:00:08,922 INFO basehttp.log_message Line:154  "GET /admin/login/?next=/admin/ HTTP/1.1" 200 1821
+2020-04-11 18:00:08,922 INFO basehttp.log_message Line:154  "GET /admin/login/?next=/admin/ HTTP/1.1" 200 1821
+2020-04-11 18:00:09,002 INFO basehttp.log_message Line:154  "GET /static/admin/css/login.css HTTP/1.1" 304 0
+2020-04-11 18:00:09,002 INFO basehttp.log_message Line:154  "GET /static/admin/css/login.css HTTP/1.1" 304 0
+2020-04-11 18:00:09,006 INFO basehttp.log_message Line:154  "GET /static/admin/css/responsive.css HTTP/1.1" 200 17944
+2020-04-11 18:00:09,006 INFO basehttp.log_message Line:154  "GET /static/admin/css/responsive.css HTTP/1.1" 200 17944
+2020-04-11 18:00:09,015 INFO basehttp.log_message Line:154  "GET /static/admin/css/base.css HTTP/1.1" 304 0
+2020-04-11 18:00:09,015 INFO basehttp.log_message Line:154  "GET /static/admin/css/base.css HTTP/1.1" 304 0
+2020-04-11 18:00:09,026 INFO basehttp.log_message Line:154  "GET /static/admin/css/fonts.css HTTP/1.1" 304 0
+2020-04-11 18:00:09,026 INFO basehttp.log_message Line:154  "GET /static/admin/css/fonts.css HTTP/1.1" 304 0
+2020-04-11 18:00:09,448 INFO basehttp.log_message Line:154  "GET /static/admin/fonts/Roboto-Regular-webfont.woff HTTP/1.1" 200 85876
+2020-04-11 18:00:09,448 INFO basehttp.log_message Line:154  "GET /static/admin/fonts/Roboto-Regular-webfont.woff HTTP/1.1" 200 85876
+2020-04-11 18:00:09,519 INFO basehttp.log_message Line:154  "GET /static/admin/fonts/Roboto-Light-webfont.woff HTTP/1.1" 200 85692
+2020-04-11 18:00:09,519 INFO basehttp.log_message Line:154  "GET /static/admin/fonts/Roboto-Light-webfont.woff HTTP/1.1" 200 85692
+2020-04-11 18:00:13,814 INFO basehttp.log_message Line:154  "POST /admin/login/?next=/admin/ HTTP/1.1" 200 1953
+2020-04-11 18:00:13,814 INFO basehttp.log_message Line:154  "POST /admin/login/?next=/admin/ HTTP/1.1" 200 1953
+2020-04-11 18:00:13,871 INFO basehttp.log_message Line:154  "GET /static/admin/fonts/Roboto-Bold-webfont.woff HTTP/1.1" 200 86184
+2020-04-11 18:00:13,871 INFO basehttp.log_message Line:154  "GET /static/admin/fonts/Roboto-Bold-webfont.woff HTTP/1.1" 200 86184

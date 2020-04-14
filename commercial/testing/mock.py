@@ -1,10 +1,13 @@
 # -*- encoding:utf-8 -*-
+
 from __future__ import absolute_import
 
 from random import randint
 
 from api.manager.positon_manager import add_activity_location
 from commercial.models import Club, CommercialActivity
+from footprint.models import Footprint
+from user_info.consts import SexChoices
 from utilities.string_utils import random_str
 
 
@@ -30,3 +33,10 @@ def create_activity(club=None, name='', address='', time_detail='', description=
                                                  lat=club.lat)
     add_activity_location(activity.id, club.lon, club.lat)
     return activity
+
+
+def create_footprint(user=None):
+    return Footprint.objects.create(
+        user=user, name='qinyi', avatar="...", sex=SexChoices.MALE, lat='1', lon='1', location='上海',
+        content='今天', image_list_str='[]', favor_num=0, comment_num=0, forward_num=0, hide=False
+    )

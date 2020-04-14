@@ -74,3 +74,5 @@ templates/sitemap/
 *.egg-info/
 local
 
+logs/elapsed_logger.log
+logs/filelog.log

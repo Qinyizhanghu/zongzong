@@ -1,3 +1,6 @@
+celery
+qiniu
+pymysql
 fabric3==1.14.post1
 
 Django==2.2

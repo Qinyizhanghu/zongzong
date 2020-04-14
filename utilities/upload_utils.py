@@ -1,5 +1,4 @@
 import qiniu
-import requests
 
 from qiniu_cloud import ServerBucket
 
