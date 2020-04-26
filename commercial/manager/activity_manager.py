@@ -1,10 +1,44 @@
+import datetime
+
 from geopy.distance import geodesic
 
-from commercial.manager.db_manager import get_commercial_activity_by_id_db, create_activity_participate_record_db
-from commercial.models import CommercialActivity, ActivityParticipant
+from commercial.manager.db_manager import get_commercial_activity_by_id_db, create_activity_participate_record_db, \
+    get_club_by_ids_db
+from commercial.models import CommercialActivity, ActivityParticipant, ClubCouponTemplate
 from footprint.manager.footprint_manager import is_user_favored
 from footprint.models import FlowType
+from utilities.distance_utils import haversine
 from utilities.time_utils import get_time_show
+
+
+def get_nearby_clubs_info(lon, lat):
+    """
+    获取用户附近的商家信息
+    需要注意: 选择的是有优惠券模板配置的商家, 否则, 没有意义
+    """
+    coupon_templates = ClubCouponTemplate.objects.filter(is_online=True, balance__gt=0,
+                                                         deadline__gt=datetime.datetime.now())
+    if not coupon_templates:
+        return {}
+
+    club_id_set = set([template.club_id for template in coupon_templates])
+    clubs = get_club_by_ids_db(club_id_set)
+    club_infos = [build_nearby_club_info(club, lon, lat) for club in clubs]
+
+    # 按照距离从近到远去展示出来
+    return club_infos.sort(key=lambda info: info['distance'])
+
+
+def build_nearby_club_info(club, lon, lat):
+    """
+    构造附近的商家信息
+    """
+    return {
+        "name": club.name,
+        "address": club.address,
+        "avatar": club.avatar,
+        "distance": haversine(lon, lat, club.lon, club.lat)
+    }
 
 
 def build_club_info(club):

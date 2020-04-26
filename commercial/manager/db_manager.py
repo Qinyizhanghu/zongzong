@@ -23,6 +23,10 @@ def get_club_by_id_db(club_id):
         return None
 
 
+def get_club_by_ids_db(club_ids):
+    return Club.objects.filter(id__in=club_ids)
+
+
 def create_activity_participate_record_db(activity_id, user_info_id, name, cellphone, num, hint):
     return ActivityParticipant.objects.get_or_create(activity_id=activity_id, user_info_id=user_info_id, defaults={
         'name': name, 'cellphone': cellphone, 'num': num, 'hint': hint

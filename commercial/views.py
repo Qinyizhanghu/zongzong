@@ -7,7 +7,7 @@ from django.views.decorators.http import require_GET, require_POST
 from commercial.manager.banner_manager import get_top_banner_db, build_top_banner
 from commercial.manager.activity_manager import build_club_info, \
     build_activity_detail, participate_activity, \
-    build_activity_brief_info
+    build_activity_brief_info, get_nearby_clubs_info
 from commercial.manager.db_manager import get_commercial_activity_by_id_db, get_commercial_activities_by_club_id_db, \
     get_club_by_id_db
 from commercial.manager.explore_banner_manager import build_explore_banner, get_explore_banner_db, homepage_pop_up_info
@@ -147,7 +147,7 @@ def activity_detail_view(request):
 @login_required
 def participate_activity_view(request):
     """
-    获取俱乐部信息
+    用户报名活动
     URL[GET]: /commercial/subscribe_activity/
     """
     user = request.user
@@ -199,3 +199,16 @@ def favor_activity_view(request):
     activity_id = post_data['activity_id']
     favor_num = add_favor_db(activity_id, FlowType.ACTIVITY, request.user.id)
     return json_http_success({'favor_num': favor_num})
+
+
+@require_GET
+@login_required
+def get_nearby_clubs_view(request):
+    """
+    获取用户 "附近的" 商家信息, 按照距离倒排
+    URL[POST]: /commercial/nearby_clubs/
+    """
+    lon = float(request.GET.get('lon', 0))
+    lat = float(request.GET.get('lat', 0))
+
+    return get_nearby_clubs_info(lon, lat)

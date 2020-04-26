@@ -29,6 +29,7 @@ def create_footprint_db(user_id, thinking, latitude, longitude, location, image_
     :param longitude: 经度
     :param location: 地点名
     :param image_list: list
+    :param hide: 是否隐藏自己可看
     :return: footprint
     """
     user_info = get_user_info_by_user_id_db(user_id)

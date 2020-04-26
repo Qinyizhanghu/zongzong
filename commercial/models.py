@@ -136,6 +136,7 @@ class ClubCouponTemplate(models.Model):
     money = models.PositiveIntegerField(default=0, verbose_name=u'优惠券金额(对普适券不生效)')
     threshold = models.PositiveIntegerField(default=0, verbose_name=u'优惠券门槛(对普适券不生效)')
     count = models.PositiveIntegerField(default=0, verbose_name=u'优惠券数量')
+    balance = models.PositiveIntegerField(default=0, verbose_name=u'优惠券余量')
     is_online = models.BooleanField(default=False, verbose_name=u'是否上线')
     deadline = models.DateTimeField(verbose_name=u'到期日期')
 
