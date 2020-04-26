@@ -1,7 +1,7 @@
 from django.contrib import admin
 from reversion.admin import VersionAdmin
 
-from commercial.models import Club, CommercialActivity, TopBanner
+from commercial.models import Club, CommercialActivity, TopBanner, ExploreBanner, ClubCouponTemplate
 
 
 class ClubAdmin(VersionAdmin):
@@ -24,3 +24,17 @@ class TopBannerAdmin(VersionAdmin):
 
 
 admin.site.register(TopBanner, TopBannerAdmin)
+
+
+class ExploreBannerAdmin(VersionAdmin):
+    list_display = ['title', 'description', 'image', 'is_online']
+
+
+admin.site.register(ExploreBanner, ExploreBannerAdmin)
+
+
+class ClubCouponTemplateAdmin(VersionAdmin):
+    list_display = ['name', 'type', 'club', 'money', 'threshold', 'count', 'is_online', 'deadline']
+
+
+admin.site.register(ClubCouponTemplate, ClubCouponTemplateAdmin)

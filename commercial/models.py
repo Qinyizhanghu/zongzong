@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models import ForeignKey
 
+from commercial.const import CouponTemplateChoices
 from user_info.models import UserBaseInfo
 
 
@@ -103,5 +104,40 @@ class ExploreBanner(models.Model):
     description = models.CharField(max_length=512, verbose_name=u'描述信息')
     image = models.CharField(max_length=250, verbose_name=u'图片啊')
     is_online = models.BooleanField(default=False, verbose_name=u'是否上线')
+    created_time = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True)
+
+
+class ClubCouponTemplate(models.Model):
+    """
+    商家优惠券模板
+    1. 优惠券名称：20字以内
+    2. 优惠券类型：单选框
+        1. 『普适券』
+        2. 『满减券』
+    3. 优惠券商家：选择框，需要精确到单个商家
+    4. 优惠券金额：如果用户选择了『普适券』，隐藏即可
+    5. 优惠券门槛：如果用户选择了『普适券』，隐藏即可
+    6. 优惠券数量：0~9999自然数即可
+    7. 上架和下架
+    8. 优惠券到期日期
+    """
+
+    def __unicode__(self):
+        return '{name}_{id}'.format(name=self.name, id=self.id)
+
+    class Meta:
+        verbose_name = u'商家优惠券模板'
+        verbose_name_plural = u'商家优惠券模板'
+
+    name = models.CharField(max_length=20, verbose_name=u'优惠券名称')
+    type = models.CharField(choices=CouponTemplateChoices, verbose_name=u'优惠券类型', max_length=10)
+    club = ForeignKey(Club, on_delete=models.CASCADE, verbose_name=u'商家')
+    money = models.PositiveIntegerField(default=0, verbose_name=u'优惠券金额(对普适券不生效)')
+    threshold = models.PositiveIntegerField(default=0, verbose_name=u'优惠券门槛(对普适券不生效)')
+    count = models.PositiveIntegerField(default=0, verbose_name=u'优惠券数量')
+    is_online = models.BooleanField(default=False, verbose_name=u'是否上线')
+    deadline = models.DateTimeField(verbose_name=u'到期日期')
+
     created_time = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)

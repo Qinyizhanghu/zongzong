@@ -23,3 +23,4 @@ def last_executed_query(self, cursor, sql, params):
 #### 1.3 V2 里面对数据表的修改
 1. 修改: 用户基础信息表 UserBaseInfo, 加了 extra_info 字段
 2. 新增: 探索模式下的 Banner 表 ExploreBanner
+3. 新增: 商户优惠券模板表 ClubCouponTemplate
