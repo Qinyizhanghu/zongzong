@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET, require_POST
@@ -8,9 +10,12 @@ from commercial.manager.activity_manager import build_club_info, \
     build_activity_brief_info
 from commercial.manager.db_manager import get_commercial_activity_by_id_db, get_commercial_activities_by_club_id_db, \
     get_club_by_id_db
+from commercial.manager.explore_banner_manager import build_explore_banner, get_explore_banner_db, homepage_pop_up_info
+from commercial.manager.explore_surplus_times_manager import ExploreSurplusTimesManager
 from footprint.manager.footprint_manager import add_favor_db
 from footprint.models import FlowType
 from user_info.manager.user_info_mananger import get_user_info_by_user_id_db
+from utilities.date_time import datetime_to_str, FORMAT_DATE_WITHOUT_SEPARATOR
 from utilities.request_utils import get_page_range, get_data_from_request
 from utilities.response import json_http_success, json_http_error
 
@@ -26,6 +31,52 @@ def get_top_banner_view(request):
     banner = get_top_banner_db()
     result = {} if not banner else build_top_banner(banner)
     return json_http_success(result)
+
+
+@require_GET
+def get_explore_banner_view(request):
+    """
+    获取顶部 explore banner 信息
+    URL[GET]: /commercial/get_explore_banner/
+    :return: {
+        'title': banner.title,
+        'description': banner.description,
+        'image': banner.image
+    }
+    """
+    return json_http_success(build_explore_banner(get_explore_banner_db()))
+
+
+@require_GET
+@login_required
+def get_homepage_pop_up_view(request):
+    """
+    获取首次进入的探索模式弹框信息
+    URL[GET]: /commercial/get_homepage_pop_up/
+    :return: {
+        'title': banner.title,
+        'description': banner.description,
+        'image': banner.image
+    } or {}
+    """
+    return homepage_pop_up_info(get_user_info_by_user_id_db(request.user.id))
+
+
+@require_GET
+@login_required
+def get_explore_surplus_times_view(request):
+    """
+    获取用户探索模式剩余的次数
+    URL[GET]: /commercial/get_explore_surplus_times/
+    :return int
+    """
+    user_info = get_user_info_by_user_id_db(request.user.id)
+    current_date = datetime_to_str(datetime.datetime.now(), date_format=FORMAT_DATE_WITHOUT_SEPARATOR)
+
+    surplus_times = ExploreSurplusTimesManager.get_explore_day_limit() \
+        - ExploreSurplusTimesManager.get_times(current_date, user_info.id)
+
+    return surplus_times if surplus_times >= 0 else 0
 
 
 @require_GET

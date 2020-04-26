@@ -86,3 +86,22 @@ class TopBanner(models.Model):
     is_online = models.BooleanField(default=False, verbose_name='是否上线')
     created_time = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
+
+
+class ExploreBanner(models.Model):
+    """
+    探索模式下的 Banner
+    """
+    def __unicode__(self):
+        return '{title}_{id}'.format(title=self.title, id=self.id)
+
+    class Meta:
+        verbose_name = u'探索模式 Banner'
+        verbose_name_plural = u'探索模式 Banner'
+
+    title = models.CharField(max_length=40, verbose_name=u'标题')
+    description = models.CharField(max_length=512, verbose_name=u'描述信息')
+    image = models.CharField(max_length=250, verbose_name=u'图片啊')
+    is_online = models.BooleanField(default=False, verbose_name=u'是否上线')
+    created_time = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True)

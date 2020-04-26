@@ -19,6 +19,7 @@ class UserBaseInfo(models.Model):
     birthday = models.DateField(verbose_name=u'出生日期', null=True)
     wechat_no = models.CharField(max_length=50, verbose_name=u'微信号', null=True)
     show_wechat_no = models.BooleanField(default=False, verbose_name=u'是否展示微信号')
+    extra_info = models.CharField(max_length=1024, verbose_name=u"额外信息, json 格式", default=u'{}')
     created_time = models.DateTimeField(auto_now_add=True, db_index=True)
     last_modified = models.DateTimeField(auto_now=True)
 

@@ -1,22 +1,55 @@
 from geopy.distance import geodesic
 
+import datetime
 from api.manager.positon_manager import user_location_container, activity_location_container
 from commercial.manager.db_manager import get_commercial_activities_by_ids_db
 from footprint.manager.footprint_manager import get_footprints_by_ids_db, is_user_favored
 from footprint.models import FlowType
-from utilities.date_time import time_format, datetime_to_str
+from utilities.date_time import time_format, datetime_to_str, total_seconds
 
 
 def build_footprint_info(footprint, position):
     return {
         'footprint_id': footprint.id,
         'time': time_format(footprint.created_time),
+        'raw_time': footprint.created_time,
         'user_id': footprint.user_id,
         'name': footprint.name,
         'avatar': footprint.avatar,
         'lat': position[1],
         'lon': position[0]
     }
+
+
+def filter_legal_footprint_info(footprint_infos):
+    """
+    过滤合法的用户足迹信息
+    7天以内的; 同一个用户3km范围内发布多条时, 自动取消发布时间比较旧的状态
+    """
+    result = []
+    now = datetime.datetime.today()
+
+    # 1. 过滤7天以内的足迹
+    for footprint in footprint_infos:
+        if total_seconds(now - footprint['raw_time']) > 7 * 24 * 60 * 60:
+            continue
+        del footprint['raw_time']
+        result.append(footprint)
+
+    if len(result) <= 1:
+        return result
+
+    # 同一个用户3km范围内发布多条时, 自动取消发布时间比较旧的状态
+    user_2_footprints = {}
+    for footprint in result:
+        if footprint['user_id'] in user_2_footprints:
+            user_2_footprints[footprint['user_id']].append(footprint)
+        else:
+            user_2_footprints[footprint['user_id']] = [footprint]
+
+    # TODO
+
+    return result
 
 
 def build_activity_info(activity, position):
@@ -34,7 +67,7 @@ def build_activity_info(activity, position):
 def get_nearby_activity(lon, lat, radius=7):
     """
     获取附近的活动
-    :param radius: 搜索半径，要求15km，那就订成7km
+    :param radius: 搜索半径，要求15km，那就定成7km
     :param lon:
     :param lat:
     :return:
@@ -45,6 +78,7 @@ def get_nearby_activity(lon, lat, radius=7):
     footprint_id_2_position = {int(footprint_id): location for footprint_id, location in zip(user_locations, positions)}
     footprints = get_footprints_by_ids_db([int(item) for item in user_locations])
 
+    # V2 新增两个需求: 7天以内的, 同一个用户3km范围内发布多条时，自动取消发布时间比较旧的状态
     result = {
         'footprints': [build_footprint_info(footprint, footprint_id_2_position.get(footprint.id))
                        for footprint in footprints]

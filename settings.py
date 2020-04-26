@@ -1,6 +1,7 @@
 import pymysql
 import os
 
+# @zhanghu mysql -uroot -pzongzong -h 127.0.0.1
 
 # version need @zhanghu
 pymysql.version_info = (1, 3, 13, "final", 0)
