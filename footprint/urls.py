@@ -1,7 +1,7 @@
 from django.urls import path
 
 from footprint.views import post_footprint_view, comment_footprint_view, get_footprint_detail_view, \
-    get_user_footprint_track_view, add_favor_view
+    get_user_footprint_track_view, add_favor_view, user_delete_footprint_view
 
 urlpatterns = [
     # 痕迹相关
@@ -10,4 +10,7 @@ urlpatterns = [
     path('favor/', add_favor_view),
     path('detail/', get_footprint_detail_view),
     path('get_user_track/', get_user_footprint_track_view),
+
+    # zhanghu
+    path('user_delete/', user_delete_footprint_view),
 ]

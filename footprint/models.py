@@ -39,6 +39,7 @@ class Footprint(models.Model):
     comment_num = models.PositiveIntegerField(default=0, verbose_name=u'评论数')
     forward_num = models.PositiveIntegerField(default=0, verbose_name=u'转发数')
     hide = models.BooleanField(default=False, verbose_name=u'是否只有自己能看到')
+    is_deleted = models.BooleanField(default=False, verbose_name=u'是否被删除')
     created_time = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
 

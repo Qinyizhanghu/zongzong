@@ -10,7 +10,6 @@ from footprint.manager.footprint_manager import create_footprint_db, add_favor_d
     build_footprint_detail, get_footprint_by_id_db, get_footprints_by_user_id_db, update_comment_num_db, \
     build_footprint_list_info
 from footprint.models import FlowType
-from log_utils.loggers import info_logger
 from utilities.content_check import is_content_valid
 from utilities.image_check import is_image_valid
 from utilities.request_utils import get_data_from_request, get_page_range
@@ -118,3 +117,21 @@ def get_user_footprint_track_view(request):
     footprints = footprints[:5]
     result = build_footprint_list_info(footprints, request.user.id, lat, lon)
     return json_http_success({'footprints': result, 'has_more': has_more})
+
+
+@login_required
+def user_delete_footprint_view(request):
+    """
+    用户删除自己发表的足迹记录
+    /footprint/user_delete/
+    """
+    user_id = int(request.GET.get('user_id', 0)) or request.user.id
+    footprint_id = int(request.GET.get('footprint_id', 0))
+
+    footprint = get_footprint_by_id_db(footprint_id)
+    if not footprint or footprint.user_id != user_id:
+        return json_http_success({})
+
+    footprint.is_deleted = True
+    footprint.save()
+    return json_http_success({})

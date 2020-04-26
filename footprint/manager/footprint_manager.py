@@ -41,10 +41,10 @@ def create_footprint_db(user_id, thinking, latitude, longitude, location, image_
 def get_user_newest_footprint_db(user_id):
     """
     获取用户最新的一个动态
-    :param user:
+    :param user_id:
     :return:
     """
-    query = Footprint.objects.filter(user_id=user_id).order_by('-created_time')
+    query = Footprint.objects.filter(user_id=user_id, is_deleted=False).order_by('-created_time')
     return query[0] if query else None
 
 
@@ -52,7 +52,7 @@ def get_footprints_by_user_id_db(user_id, start, end):
     """
     获取用户足迹
     """
-    return Footprint.objects.filter(user_id=user_id).order_by('-created_time')[start: end]
+    return Footprint.objects.filter(user_id=user_id, is_deleted=False).order_by('-created_time')[start: end]
 
 
 def update_footprint_favor_num_db(footprint_id, num):
