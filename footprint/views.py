@@ -10,6 +10,7 @@ from footprint.manager.footprint_manager import create_footprint_db, add_favor_d
     build_footprint_detail, get_footprint_by_id_db, get_footprints_by_user_id_db, update_comment_num_db, \
     build_footprint_list_info
 from footprint.models import FlowType
+from user_info.manager.user_info_mananger import get_user_info_by_user_id_db
 from utilities.content_check import is_content_valid
 from utilities.image_check import is_image_valid
 from utilities.request_utils import get_data_from_request, get_page_range
@@ -134,4 +135,27 @@ def user_delete_footprint_view(request):
 
     footprint.is_deleted = True
     footprint.save()
+    return json_http_success({})
+
+
+@login_required
+def help_post_pop_up_view(request):
+    """
+    用户首次进入帮助贴的弹窗
+    /footprint/user_help_post_pop_up/
+    """
+    user_info = get_user_info_by_user_id_db(request.user.id)
+    user_info_extra = json.loads(user_info.extra_info)
+
+    if 'first_time_help_post' not in user_info_extra:
+        user_info_extra['first_time_help_post'] = True
+        user_info.extra_info = json.dumps(user_info_extra)
+        user_info.save()
+        return json_http_success({
+            "title": u'【掘地求胜】求助帖说明',
+            "image": u'',
+            "description": u'欢迎来到【掘地求胜】活动，在这里，如何您有中意的商家，'
+                           u'您可以向周围的小哥哥/小姐姐发送求助，索要商家优惠券。\n您只要选择商家后，点击发布TA就能看到啦~'
+        })
+
     return json_http_success({})
