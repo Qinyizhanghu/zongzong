@@ -27,3 +27,4 @@ def last_executed_query(self, cursor, sql, params):
 4. 修改: Footprint 表新增了 is_deleted 字段
 5. 修改: Footprint 表新增了 post_type 字段
 6. 修改: Footprint 表新增了 template_id 字段
+7. 新增: UserCoupon 表 (用户优惠券)

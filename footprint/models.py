@@ -18,6 +18,12 @@ class PostType(EnumBase):
     HELP = EnumItem('help', u'求助帖')
 
 
+# 优惠券获取的方式
+class CouponAcquireWay(EnumBase):
+    DRAW = EnumItem('draw', u'自己领取')
+    DONATE = EnumItem('donate', u'他人赠送')
+
+
 class TotalFlow(models.Model):
     """
     footprint和activity的合集
@@ -128,5 +134,19 @@ class FootprintCommentFavor(models.Model):
     footprint_comment_id = models.IntegerField(verbose_name='话题评论id')
     user_id = models.IntegerField(verbose_name=u'评论者user_id')
     favored = models.BooleanField(verbose_name=u'是否点赞', default=True)
+    created_time = models.DateTimeField(auto_now_add=True, db_index=True)
+    last_modified = models.DateTimeField(auto_now=True)
+
+
+class UserCoupon(models.Model):
+    """
+    用户优惠券
+    """
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    template = models.ForeignKey(ClubCouponTemplate, on_delete=models.CASCADE)
+    acquire_way = models.CharField(choices=CouponAcquireWay, verbose_name=u'获取方式',
+                                   default=CouponAcquireWay.DRAW, max_length=10)
+    donate_user_id = models.IntegerField(verbose_name=u'赠送者 user_id', default=0)
+
     created_time = models.DateTimeField(auto_now_add=True, db_index=True)
     last_modified = models.DateTimeField(auto_now=True)
