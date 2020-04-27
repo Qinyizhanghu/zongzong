@@ -147,6 +147,7 @@ class UserCoupon(models.Model):
     acquire_way = models.CharField(choices=CouponAcquireWay, verbose_name=u'获取方式',
                                    default=CouponAcquireWay.DRAW, max_length=10)
     donate_user_id = models.IntegerField(verbose_name=u'赠送者 user_id', default=0)
+    coupon_code = models.CharField(max_length=100, default='', blank=True, null=True, help_text='优惠券码')
     is_used = models.BooleanField(verbose_name=u'是否已使用', default=False)
 
     created_time = models.DateTimeField(auto_now_add=True, db_index=True)

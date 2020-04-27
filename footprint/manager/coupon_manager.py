@@ -9,6 +9,7 @@ from footprint.models import CouponAcquireWay, UserCoupon
 from redis_utils.container.api_redis_client import redis
 from user_info.manager.user_info_mananger import get_user_info_by_user_id_db
 from utilities.date_time import datetime_to_str
+from utilities.string_utils import random_str
 
 
 class UserNewCouponManager(object):
@@ -51,7 +52,7 @@ class UserNewCouponManager(object):
             redis.hset_pickle(cls.build_redis_key(), user_info_id, new_coupon_info)
 
 
-def acquire_new_coupon(user, template, acquire_way=CouponAcquireWay.DRAW, donate_user_id=0):
+def acquire_new_coupon(user, template, acquire_way=CouponAcquireWay.DRAW, donate_user_id=0, coupon_code=None):
     """
     获取新的优惠券
     """
@@ -59,7 +60,9 @@ def acquire_new_coupon(user, template, acquire_way=CouponAcquireWay.DRAW, donate
         user=user,
         template=template,
         acquire_way=acquire_way,
-        donate_user_id=donate_user_id
+        donate_user_id=donate_user_id,
+        coupon_code=coupon_code if coupon_code else random_str(15),
+        is_used=False
     )
 
     # 获取了新的优惠券之后, 更新缓存信息
