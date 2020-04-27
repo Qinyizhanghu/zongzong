@@ -9,7 +9,7 @@ from footprint.models import CouponAcquireWay, UserCoupon
 from redis_utils.container.api_redis_client import redis
 from user_info.manager.user_info_mananger import get_user_info_by_user_id_db
 from utilities.date_time import datetime_to_str
-from utilities.string_utils import random_str
+from utilities.string_utils import random_numerical
 
 
 class UserNewCouponManager(object):
@@ -61,7 +61,7 @@ def acquire_new_coupon(user, template, acquire_way=CouponAcquireWay.DRAW, donate
         template=template,
         acquire_way=acquire_way,
         donate_user_id=donate_user_id,
-        coupon_code=coupon_code if coupon_code else random_str(15),
+        coupon_code=coupon_code if coupon_code else random_numerical(),
         is_used=False
     )
 
