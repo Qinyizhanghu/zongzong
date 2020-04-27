@@ -9,11 +9,11 @@ from api.manager.positon_manager import add_user_location
 from commercial.manager.activity_manager import get_template_id_by_club
 from commercial.manager.db_manager import get_club_by_id_db
 from footprint.manager.comment_manager import create_comment_db
-from footprint.manager.coupon_manager import build_user_coupon_list_info
+from footprint.manager.coupon_manager import build_user_coupon_list_info, build_user_coupon_info
 from footprint.manager.footprint_manager import create_footprint_db, add_favor_db, \
     build_footprint_detail, get_footprint_by_id_db, get_footprints_by_user_id_db, update_comment_num_db, \
     build_footprint_list_info
-from footprint.models import FlowType, PostType
+from footprint.models import FlowType, PostType, UserCoupon
 from user_info.manager.user_info_mananger import get_user_info_by_user_id_db
 from utilities.content_check import is_content_valid
 from utilities.image_check import is_image_valid
@@ -186,3 +186,14 @@ def get_user_coupon_list_view(request):
     /footprint/user_coupon_list/
     """
     return json_http_success(build_user_coupon_list_info(request.user))
+
+
+@require_GET
+@login_required
+def get_user_coupon_info_view(request):
+    """
+    获取单张用户优惠券信息
+    /footprint/user_coupon_info/
+    """
+    coupon_id = int(request.GET.get('coupon_id', 0))
+    return json_http_success(build_user_coupon_info(UserCoupon.objects.get(id=coupon_id)))

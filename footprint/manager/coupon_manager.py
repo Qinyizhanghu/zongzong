@@ -102,10 +102,12 @@ def build_user_coupon_info(coupon):
         'club_id': coupon.template.club.id,
         'avatar': coupon.template.club.avatar,
         'club_name': coupon.template.club.name,
+        'address': coupon.template.club.address,
         'coupon_id': coupon.id,
         'coupon_money': coupon_money,
         'coupon_type': coupon.template.template_type,
         'coupon_name': coupon.template.name,
         'coupon_deadline': datetime_to_str(coupon.template.deadline),
+        'coupon_code': coupon.coupon_code,
         'coupon_is_used': coupon.is_used
     }
