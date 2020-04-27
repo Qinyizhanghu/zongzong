@@ -95,8 +95,7 @@ def build_user_coupon_info(coupon):
         优惠券到期日期
     """
 
-    coupon_money = u'礼品券' if coupon.template.template_type == CouponTemplateChoices.GENERAL \
-        else str(coupon.template.money)
+    coupon_money = 0 if coupon.template.template_type == CouponTemplateChoices.GENERAL else coupon.template.money
 
     return {
         'club_id': coupon.template.club.id,

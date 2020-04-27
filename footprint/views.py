@@ -1,3 +1,4 @@
+import datetime
 import json
 import logging
 
@@ -6,16 +7,19 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET
 
 from api.manager.positon_manager import add_user_location
-from commercial.manager.activity_manager import get_template_id_by_club
+from commercial.manager.activity_manager import get_template_id_by_club, build_coupon_template_info
 from commercial.manager.db_manager import get_club_by_id_db
+from commercial.manager.explore_surplus_times_manager import ExploreSurplusTimesManager
 from footprint.manager.comment_manager import create_comment_db
 from footprint.manager.coupon_manager import build_user_coupon_list_info, build_user_coupon_info
 from footprint.manager.footprint_manager import create_footprint_db, add_favor_db, \
     build_footprint_detail, get_footprint_by_id_db, get_footprints_by_user_id_db, update_comment_num_db, \
     build_footprint_list_info
+from footprint.manager.next_explore_post_manager import get_next_explore_template
 from footprint.models import FlowType, PostType, UserCoupon
 from user_info.manager.user_info_mananger import get_user_info_by_user_id_db
 from utilities.content_check import is_content_valid
+from utilities.date_time import datetime_to_str, FORMAT_DATE_WITHOUT_SEPARATOR
 from utilities.image_check import is_image_valid
 from utilities.request_utils import get_data_from_request, get_page_range
 from utilities.response import json_http_success, json_http_error
@@ -197,3 +201,39 @@ def get_user_coupon_info_view(request):
     """
     coupon_id = int(request.GET.get('coupon_id', 0))
     return json_http_success(build_user_coupon_info(UserCoupon.objects.get(id=coupon_id)))
+
+
+@require_GET
+@login_required
+def get_next_explore_post_view(request):
+    """
+    获取信息流的下一个:
+    1. 信息流包含: 普通信息(足迹, 求助帖) + 优惠券信息
+    2. [3, 9, 20, 30] 这四个位置是优惠券, 如果没有足够的普通信息, 都填充优惠券就可以了
+    3. 0~10km、10~30km、30~100km、100km 及以上
+
+    GET: /footprint/next_explore_post/
+    """
+    lon = float(request.GET.get('lon', 0))
+    lat = float(request.GET.get('lat', 0))
+
+    user_info = get_user_info_by_user_id_db(request.user.id)
+    current_date = datetime_to_str(datetime.datetime.now(), date_format=FORMAT_DATE_WITHOUT_SEPARATOR)
+    next_explore_times = int(ExploreSurplusTimesManager.get_times(current_date, user_info.id)) + 1
+
+    if next_explore_times > ExploreSurplusTimesManager.EXPLORE_DAY_LIMIT:
+        return json_http_error(u'今天的次数已经用完了')
+
+    # 增加一次探索次数
+    ExploreSurplusTimesManager.add_times(current_date, user_info.id)
+
+    # 随机返回一张优惠券, 但是, 注意位置 (获取不到优惠券, 返回用户足迹吧)
+    if next_explore_times in [3, 9, 20, 30]:
+        coupon_template = get_next_explore_template(next_explore_times)
+        if coupon_template:
+            # 返回的信息里面带有 type, 前端识别不同的 type 去展示
+            return build_coupon_template_info(coupon_template)
+
+
+
+

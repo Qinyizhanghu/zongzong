@@ -14,6 +14,7 @@ class ExploreSurplusTimesManager(object):
     探索模式剩余次数管理
     """
     EXPLORE_DAY_LIMIT = 30
+    EXPIRE_TIME = 60 * 60 * 24 * 2  # 过期时间为 2 天
 
     @classmethod
     def get_explore_day_limit(cls):
@@ -40,6 +41,7 @@ class ExploreSurplusTimesManager(object):
             new_times_info = old_times_info
 
         redis.hset_pickle(cls.build_redis_key(current_date), user_info_id, new_times_info)
+        redis.expire(cls.build_redis_key(current_date), cls.EXPIRE_TIME)
 
     @classmethod
     def get_raw_times(cls, current_date, user_info_id):

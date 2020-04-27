@@ -8,6 +8,7 @@ from commercial.manager.db_manager import get_commercial_activity_by_id_db, crea
 from commercial.models import CommercialActivity, ActivityParticipant, ClubCouponTemplate
 from footprint.manager.footprint_manager import is_user_favored
 from footprint.models import FlowType
+from utilities.date_time import datetime_to_str
 from utilities.distance_utils import haversine
 from utilities.time_utils import get_time_show
 
@@ -162,4 +163,24 @@ def build_activity_brief_info(activity, user_id, lon, lat):
         'activity_id': activity.id,
         'favored': is_user_favored(user_id, activity.id, FlowType.ACTIVITY),
         'favor_num': activity.favor_num
+    }
+
+
+def build_coupon_template_info(template):
+    """
+    构造优惠券模板信息
+    商户 id、商户头像、商户名称、商户地址、优惠券名称、优惠券截止日期、优惠券金额
+    """
+    coupon_money = 0 if template.template_type == CouponTemplateChoices.GENERAL else template.money
+
+    return {
+        'club_id': template.club_id,
+        'avatar': template.club.avatar,
+        'club_name': template.club.name,
+        'address': template.club.address,
+        'template_id': template.id,
+        'template_name': template.name,
+        'deadline': datetime_to_str(template.deadline),
+        'coupon_money': coupon_money,
+        'type': 'coupon_template'
     }
