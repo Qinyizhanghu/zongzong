@@ -3,11 +3,13 @@ import logging
 
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_GET
 
 from api.manager.positon_manager import add_user_location
 from commercial.manager.activity_manager import get_template_id_by_club
 from commercial.manager.db_manager import get_club_by_id_db
 from footprint.manager.comment_manager import create_comment_db
+from footprint.manager.coupon_manager import build_user_coupon_list_info
 from footprint.manager.footprint_manager import create_footprint_db, add_favor_db, \
     build_footprint_detail, get_footprint_by_id_db, get_footprints_by_user_id_db, update_comment_num_db, \
     build_footprint_list_info
@@ -174,3 +176,13 @@ def help_post_pop_up_view(request):
         })
 
     return json_http_success({})
+
+
+@require_GET
+@login_required
+def get_user_coupon_list_view(request):
+    """
+    获取用户优惠券列表信息
+    /footprint/user_coupon_list/
+    """
+    return json_http_success(build_user_coupon_list_info(request.user))
