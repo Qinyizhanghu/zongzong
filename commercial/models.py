@@ -131,7 +131,7 @@ class ClubCouponTemplate(models.Model):
         verbose_name_plural = u'商家优惠券模板'
 
     name = models.CharField(max_length=20, verbose_name=u'优惠券名称')
-    type = models.CharField(choices=CouponTemplateChoices, verbose_name=u'优惠券类型', max_length=10)
+    template_type = models.CharField(choices=CouponTemplateChoices, verbose_name=u'优惠券类型', max_length=10)
     club = ForeignKey(Club, on_delete=models.CASCADE, verbose_name=u'商家')
     money = models.PositiveIntegerField(default=0, verbose_name=u'优惠券金额(对普适券不生效)')
     threshold = models.PositiveIntegerField(default=0, verbose_name=u'优惠券门槛(对普适券不生效)')

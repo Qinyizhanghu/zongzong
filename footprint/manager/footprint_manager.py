@@ -20,7 +20,7 @@ def get_footprints_by_ids_db(footprint_ids):
     return Footprint.objects.filter(id__in=footprint_ids)
 
 
-def create_footprint_db(user_id, thinking, latitude, longitude, location, image_list, hide):
+def create_footprint_db(user_id, thinking, latitude, longitude, location, image_list, hide, post_type, template_id):
     """
     创建痕迹
     :param user_id:
@@ -30,12 +30,15 @@ def create_footprint_db(user_id, thinking, latitude, longitude, location, image_
     :param location: 地点名
     :param image_list: list
     :param hide: 是否隐藏自己可看
+    :param post_type: 类型
+    :param template_id: 模板 id
     :return: footprint
     """
     user_info = get_user_info_by_user_id_db(user_id)
     footprint = Footprint.objects.create(user=user_info.user, name=user_info.nickname, sex=user_info.sex,
                                          content=thinking, lat=latitude, lon=longitude, location=location,
-                                         image_list_str=json.dumps(image_list), hide=hide, avatar=user_info.avatar)
+                                         image_list_str=json.dumps(image_list), hide=hide, avatar=user_info.avatar,
+                                         post_type=post_type, template_id=template_id)
     return footprint
 
 

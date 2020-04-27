@@ -25,3 +25,5 @@ def last_executed_query(self, cursor, sql, params):
 2. 新增: 探索模式下的 Banner 表 ExploreBanner
 3. 新增: 商户优惠券模板表 ClubCouponTemplate
 4. 修改: Footprint 表新增了 is_deleted 字段
+5. 修改: Footprint 表新增了 post_type 字段
+6. 修改: Footprint 表新增了 template_id 字段

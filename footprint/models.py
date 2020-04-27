@@ -3,6 +3,7 @@ import json
 from django.contrib.auth.models import User
 from django.db import models
 
+from commercial.models import ClubCouponTemplate
 from user_info.consts import SexChoices
 from utilities.enum import EnumBase, EnumItem
 
@@ -10,6 +11,11 @@ from utilities.enum import EnumBase, EnumItem
 class FlowType(EnumBase):
     ACTIVITY = EnumItem(0, '商业活动')
     FOOTPRINT = EnumItem(1, '足迹')
+
+
+class PostType(EnumBase):
+    NOTE = EnumItem('note', u'普通发布的文字')
+    HELP = EnumItem('help', u'求助帖')
 
 
 class TotalFlow(models.Model):
@@ -25,6 +31,7 @@ class TotalFlow(models.Model):
 class Footprint(models.Model):
     """
     姓名 性别  年龄  标签  时间 地点  距离
+    求助帖同样是用户发布的足迹
     """
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=20, verbose_name=u'姓名')
@@ -39,7 +46,11 @@ class Footprint(models.Model):
     comment_num = models.PositiveIntegerField(default=0, verbose_name=u'评论数')
     forward_num = models.PositiveIntegerField(default=0, verbose_name=u'转发数')
     hide = models.BooleanField(default=False, verbose_name=u'是否只有自己能看到')
+    # @zhanghu
     is_deleted = models.BooleanField(default=False, verbose_name=u'是否被删除')
+    post_type = models.CharField(choices=PostType, verbose_name=u'帖子类型', default=PostType.NOTE, max_length=10)
+    template_id = models.IntegerField(default=0, verbose_name=u'优惠券模板 id')  # 求助帖需要优惠券模板的信息
+
     created_time = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
 

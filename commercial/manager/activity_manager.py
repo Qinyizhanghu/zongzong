@@ -2,6 +2,7 @@ import datetime
 
 from geopy.distance import geodesic
 
+from commercial.const import CouponTemplateChoices
 from commercial.manager.db_manager import get_commercial_activity_by_id_db, create_activity_participate_record_db, \
     get_club_by_ids_db
 from commercial.models import CommercialActivity, ActivityParticipant, ClubCouponTemplate
@@ -34,11 +35,35 @@ def build_nearby_club_info(club, lon, lat):
     构造附近的商家信息
     """
     return {
+        "club_id": club.id,
         "name": club.name,
         "address": club.address,
         "avatar": club.avatar,
         "distance": haversine(lon, lat, club.lon, club.lat)
     }
+
+
+def get_template_id_by_club(club):
+    """
+    根据商家去获取商家优惠力度最大的优惠券
+    """
+    templates = ClubCouponTemplate.objects.filter(is_online=True, balance__gt=0, deadline__gt=datetime.datetime.now(),
+                                                  club=club)
+    if not templates:
+        return 0
+
+    template_id_2_money = {}
+
+    for template in templates:
+        if template.template_type == CouponTemplateChoices.FULL:
+            template_id_2_money[template.id] = template.money
+
+    # 如果不存在满减券, 随机返回一个普适券
+    if not template_id_2_money:
+        return templates[0].id
+
+    # 获取优惠力度最大的优惠券的 id
+    return max(zip(template_id_2_money.values(), template_id_2_money.keys()))[1].id
 
 
 def build_club_info(club):

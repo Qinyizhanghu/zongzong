@@ -5,11 +5,13 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 
 from api.manager.positon_manager import add_user_location
+from commercial.manager.activity_manager import get_template_id_by_club
+from commercial.manager.db_manager import get_club_by_id_db
 from footprint.manager.comment_manager import create_comment_db
 from footprint.manager.footprint_manager import create_footprint_db, add_favor_db, \
     build_footprint_detail, get_footprint_by_id_db, get_footprints_by_user_id_db, update_comment_num_db, \
     build_footprint_list_info
-from footprint.models import FlowType
+from footprint.models import FlowType, PostType
 from user_info.manager.user_info_mananger import get_user_info_by_user_id_db
 from utilities.content_check import is_content_valid
 from utilities.image_check import is_image_valid
@@ -58,6 +60,7 @@ def comment_footprint_view(request):
 def post_footprint_view(request):
     """
     发布踪踪动态
+    求助帖的发布与 V1 的帖子不同之处只有一点: 需要传递商家 id
     URL[POST]: /footprint/create/
     :param request:
     :return:
@@ -77,7 +80,19 @@ def post_footprint_view(request):
         if not is_image_valid(image):
             return json_http_error('请文明发言')
     hide = bool(int(post_data.get('hide', 0)))
-    footprint = create_footprint_db(request.user, content, latitude, longitude, location, image_list, hide)
+
+    # @zhanghu 在这里校验下是不是帮助贴
+    club = get_club_by_id_db(int(post_data.get('club_id', 0)))
+    if not club:
+        footprint = create_footprint_db(request.user, content, latitude, longitude, location, image_list, hide,
+                                        PostType.NOTE, 0)
+    else:
+        # 找到金额最大的优惠券模板, 或者是一个普适券(注意, 如果找不到优惠券, 仍然降级为 NOTE 类型的足迹)
+        target_template_id = get_template_id_by_club(club)
+        post_type = PostType.HELP if target_template_id > 0 else PostType.NOTE
+        footprint = create_footprint_db(request.user, content, latitude, longitude, location, image_list, hide,
+                                        post_type, target_template_id)
+
     if latitude and longitude:
         add_user_location(footprint.id, longitude, latitude)
     return json_http_success()
