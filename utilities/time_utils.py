@@ -28,4 +28,6 @@ def get_age_by_birthday(birthday):
     :param birthday: datetime.date
     :return: int
     """
+    if not birthday:
+        return 0
     return ((datetime.date.today() - birthday).days + 364) / 365

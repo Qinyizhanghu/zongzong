@@ -23,7 +23,7 @@ def create_chat_record_db(conversation_id, content_json, send_id):
     {"type": "text", "text":"[文本]我的病情是这样的..."},
     {"type": "image", "url":"[图片]images/2011/09/06/da56b46bf19b.png"},
     {"type": "audio", "url":"[音频]audio/2011/09/06/da56b46bf19b.png", "duration": 1200《单位为毫秒》},
-    :param content:
+    :param content_json:
     :param send_id: 发送者的user_id
     :return:
     """
@@ -57,8 +57,9 @@ def build_conversation_list(user_id, conversation_id, conversation_info, msg_id,
 
     :param user_id:
     :param conversation_id:
-    :param start:
-    :param end:
+    :param conversation_info:
+    :param msg_id:
+    :param get_new:
     :return:
     """
     my_info = get_user_info_by_user_id_db(user_id)

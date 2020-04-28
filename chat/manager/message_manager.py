@@ -35,7 +35,7 @@ class ConversationMessageManager(object):
         redis.hset_pickle(cls.build_redis_key(to_user_id), conversation_id, message)
 
         # 更新信息
-        message['has_new'] = 0
+        message['has_new'] = 1
         redis.hset_pickle(cls.build_redis_key(from_user_id), conversation_id, message)
 
     @classmethod

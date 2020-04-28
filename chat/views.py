@@ -49,6 +49,7 @@ def post_content_view(request):
     conversation_id = data.get('conversation_id')
     if not receiver_id and not conversation_id:
         return json_http_error('参数错误')
+    # 生成一个会话 id
     conversation_id = conversation_id or get_conversation_id_by_user_ids([receiver_id, request.user.id])
     content = data['content_json']
     if content['type'] == 'image':
@@ -58,10 +59,23 @@ def post_content_view(request):
         if not is_content_valid(content['text']):
             return json_http_error('请文明发言！')
     content_str = json.dumps(content)
+    # 创建一条会话记录
     chat_record = create_chat_record_db(conversation_id, content_str, request.user.id)
-    # 发推送、更新badge、
+    # 发推送、更新badge
     ConversationMessageManager.add_message(receiver_id, request.user.id, conversation_id, content)
     return json_http_success()
+
+
+@csrf_exempt
+@require_POST
+@login_required
+def explore_say_hello_view(request):
+    """
+    探索模式下的打招呼按钮
+    """
+    data = get_data_from_request(request)
+    receiver_id = int(data.get('receiver_id'))  # 消息接收者 id
+
 
 
 @require_GET
