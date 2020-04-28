@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET, require_POST
 
 from chat.manager.chat_manager import get_conversation_id_by_user_ids, create_chat_record_db, build_conversation_list, \
-    get_or_create_conversation_info, get_conversation_info_by_conversation_id
+    get_or_create_conversation_info, get_conversation_info_by_conversation_id, get_conversation_info_by_user_ids
 from chat.manager.message_manager import ConversationMessageManager
 from utilities.content_check import is_content_valid
 from utilities.image_check import is_image_valid
@@ -72,10 +72,34 @@ def post_content_view(request):
 def explore_say_hello_view(request):
     """
     探索模式下的打招呼按钮
+    URL[POST]: /chat/explore_say_hello/
     """
     data = get_data_from_request(request)
     receiver_id = int(data.get('receiver_id'))  # 消息接收者 id
 
+    # 需要先根据 user_id 和 receiver_id 确定会话是否已经建立了
+    user_ids = [int(receiver_id), request.user.id]
+    user_ids.sort(key=lambda peer_id: int(peer_id))
+
+    content = {
+        'type': 'text',
+        'text': [{"node": "text", "text": u"我来打个招呼~"}]
+    }
+    content_str = json.dumps(content)
+
+    # 尝试获取会话信息
+    chat_info = get_conversation_info_by_user_ids(user_ids[0], user_ids[1])
+    # 如果获取不到, 则主动创建一个
+    if not chat_info:
+        conversation_id = get_conversation_id_by_user_ids([user_ids[0], user_ids[1]])
+        chat_info, _ = get_or_create_conversation_info(conversation_id, user_ids[0], user_ids[1])
+
+    # 创建一条会话记录
+    chat_record = create_chat_record_db(chat_info.conversation_id, content_str, request.user.id)
+    # 发推送、更新badge
+    ConversationMessageManager.add_message(receiver_id, request.user.id, chat_info.conversation_id, content)
+
+    return json_http_success()
 
 
 @require_GET
@@ -94,6 +118,7 @@ def get_conversation_detail_view(request):
         conversation_info = get_conversation_info_by_conversation_id(conversation_id)
     elif receiver_id:
         conversation_id = get_conversation_id_by_user_ids([int(receiver_id), request.user.id])
+        # 创建一个会话 id 记录, 对于用户 id 的存储, 第一个id < 第二个 id
         conversation_info, _ = get_or_create_conversation_info(conversation_id, request.user.id, int(receiver_id))
     else:
         return json_http_error('参数错误')

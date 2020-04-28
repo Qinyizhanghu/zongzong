@@ -38,9 +38,19 @@ def get_conversation_info_by_conversation_id(conversation_id):
         return None
 
 
+def get_conversation_info_by_user_ids(user_1_id, user_2_id):
+    """
+    根据两个 user_id 获取对象信息
+    """
+    try:
+        return ChatConversationInfo.objects.get(user_1_id=user_1_id, user_2_id=user_2_id)
+    except ChatConversationInfo.DoesNotExist:
+        return None
+
+
 def get_or_create_conversation_info(conversation_id, send_id, receiver_id):
     """
-
+    获取或者创建一个会话记录
     :param conversation_id:
     :param send_id:
     :param receiver_id:
