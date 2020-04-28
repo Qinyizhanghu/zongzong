@@ -117,3 +117,17 @@ def get_user_coupon_count(user, template):
     获取用户优惠券的个数
     """
     return UserCoupon.objects.filter(user=user, template=template, is_used=False).count()
+
+
+def get_user_coupon_by_template(user, template):
+    """
+    获取用户优惠券
+    """
+    return UserCoupon.objects.filter(user=user, template=template, is_used=False)
+
+
+def delete_user_coupon_by_id(coupon_id):
+    """
+    根据 id 删除用户优惠券
+    """
+    UserCoupon.objects.get(id=coupon_id).delete()

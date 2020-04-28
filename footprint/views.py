@@ -4,20 +4,21 @@ import logging
 
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_GET
+from django.views.decorators.http import require_GET, require_POST
 
 from api.manager.positon_manager import add_user_location
 from commercial.manager.activity_manager import get_template_id_by_club, build_coupon_template_info
-from commercial.manager.db_manager import get_club_by_id_db
+from commercial.manager.db_manager import get_club_by_id_db, get_coupon_template_by_id_db
 from commercial.manager.explore_surplus_times_manager import ExploreSurplusTimesManager
 from footprint.manager.comment_manager import create_comment_db
-from footprint.manager.coupon_manager import build_user_coupon_list_info, build_user_coupon_info
+from footprint.manager.coupon_manager import build_user_coupon_list_info, build_user_coupon_info, acquire_new_coupon, \
+    get_user_coupon_count, get_user_coupon_by_template, delete_user_coupon_by_id
 from footprint.manager.footprint_manager import create_footprint_db, add_favor_db, \
     build_footprint_detail, get_footprint_by_id_db, get_footprints_by_user_id_db, update_comment_num_db, \
     build_footprint_list_info
 from footprint.manager.next_explore_post_manager import get_next_explore_template, get_next_explore_footprint, \
     build_footprint_info_for_explore
-from footprint.models import FlowType, PostType, UserCoupon
+from footprint.models import FlowType, PostType, UserCoupon, CouponAcquireWay
 from user_info.manager.user_info_mananger import get_user_info_by_user_id_db
 from utilities.content_check import is_content_valid
 from utilities.date_time import datetime_to_str, FORMAT_DATE_WITHOUT_SEPARATOR
@@ -252,3 +253,41 @@ def get_next_explore_post_view(request):
             return json_http_success(build_coupon_template_info(coupon_template))
         # 如果优惠券也获取不到
         return json_http_error(u'没有更多的探索啦')
+
+
+@csrf_exempt
+@require_POST
+@login_required
+def acquire_coupon_template_view(request):
+    """
+    用户主动领取优惠券模板
+    POST: /footprint/acquire_coupon/
+    """
+    user = request.user
+    post_data = get_data_from_request(request)
+
+    template = get_coupon_template_by_id_db(post_data['template_id'])
+    return json_http_success({'id': acquire_new_coupon(user, template)})
+
+
+@csrf_exempt
+@require_POST
+@login_required
+def donate_coupon_to_others_view(request):
+    """
+    用户把自己的优惠券转赠给其他人
+    POST: /footprint/donate_coupon/
+    """
+    user = request.user
+    post_data = get_data_from_request(request)
+    # 转赠的目标用户
+    target_user = get_user_info_by_user_id_db(post_data['user_id']).user
+
+    template = get_coupon_template_by_id_db(post_data['template_id'])
+    if get_user_coupon_count(user, template) <= 0:
+        return json_http_error(u'您当前没有该商家优惠券~优惠券在信息流中获取哦~')
+
+    user_coupon = get_user_coupon_by_template(user, template)[0]
+    acquire_new_coupon(target_user, template, acquire_way=CouponAcquireWay.DONATE,
+                       donate_user_id=user.id, coupon_code=user_coupon.coupon_code)
+    delete_user_coupon_by_id(user_coupon.id)
