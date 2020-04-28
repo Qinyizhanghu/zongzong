@@ -110,3 +110,10 @@ def build_user_coupon_info(coupon):
         'coupon_code': coupon.coupon_code,
         'coupon_is_used': coupon.is_used
     }
+
+
+def get_user_coupon_count(user, template):
+    """
+    获取用户优惠券的个数
+    """
+    return UserCoupon.objects.filter(user=user, template=template, is_used=False).count()

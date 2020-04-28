@@ -15,7 +15,8 @@ from footprint.manager.coupon_manager import build_user_coupon_list_info, build_
 from footprint.manager.footprint_manager import create_footprint_db, add_favor_db, \
     build_footprint_detail, get_footprint_by_id_db, get_footprints_by_user_id_db, update_comment_num_db, \
     build_footprint_list_info
-from footprint.manager.next_explore_post_manager import get_next_explore_template
+from footprint.manager.next_explore_post_manager import get_next_explore_template, get_next_explore_footprint, \
+    build_footprint_info_for_explore
 from footprint.models import FlowType, PostType, UserCoupon
 from user_info.manager.user_info_mananger import get_user_info_by_user_id_db
 from utilities.content_check import is_content_valid
@@ -213,6 +214,8 @@ def get_next_explore_post_view(request):
     3. 0~10km、10~30km、30~100km、100km 及以上
 
     GET: /footprint/next_explore_post/
+
+    一共有四种返回类型: text, image_text, coupon_template, help
     """
     lon = float(request.GET.get('lon', 0))
     lat = float(request.GET.get('lat', 0))
@@ -232,8 +235,20 @@ def get_next_explore_post_view(request):
         coupon_template = get_next_explore_template(next_explore_times)
         if coupon_template:
             # 返回的信息里面带有 type, 前端识别不同的 type 去展示
-            return build_coupon_template_info(coupon_template)
-
-
-
-
+            return json_http_success(build_coupon_template_info(coupon_template))
+        else:
+            footprint = get_next_explore_footprint(next_explore_times, lon, lat, request.user)
+            if footprint:
+                return json_http_success(build_footprint_info_for_explore(request.user, footprint))
+            return json_http_error(u'没有更多的探索啦')
+    else:
+        # 如果不是优惠券的位置, 返回足迹
+        footprint = get_next_explore_footprint(next_explore_times, lon, lat, request.user)
+        if footprint:
+            return json_http_success(build_footprint_info_for_explore(request.user, footprint))
+        # 如果获取不到足迹, 再尝试返回优惠券
+        coupon_template = get_next_explore_template(next_explore_times, ignore_index=True)
+        if coupon_template:
+            return json_http_success(build_coupon_template_info(coupon_template))
+        # 如果优惠券也获取不到
+        return json_http_error(u'没有更多的探索啦')

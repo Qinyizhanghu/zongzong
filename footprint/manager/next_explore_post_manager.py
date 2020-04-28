@@ -8,8 +8,12 @@ import datetime
 import random
 
 from api.manager.positon_manager import user_location_container
+from commercial.const import CouponTemplateChoices
 from commercial.models import ClubCouponTemplate
+from footprint.manager.coupon_manager import get_user_coupon_count
 from footprint.manager.footprint_manager import get_footprints_by_ids_db
+from footprint.models import PostType
+from utilities.date_time import time_format, datetime_to_str
 
 NEXT_EXPLORE_TEMPLATE_MAP = {
     3: 1,
@@ -52,7 +56,7 @@ def get_next_explore_footprint(next_explore_times, lon, lat, user):
 
     legal_footprints_10 = []
     for footprints_x in footprints_10:
-        if footprints_x.user != user:
+        if footprints_x.user != user and not footprints_x.is_deleted:
             legal_footprints_10.append(footprints_x)
 
     if len(legal_footprints_10) >= next_explore_times:
@@ -65,7 +69,7 @@ def get_next_explore_footprint(next_explore_times, lon, lat, user):
 
     legal_footprints_30 = []
     for footprints_y in footprints_30:
-        if footprints_y.user != user and footprints_y.id not in footprints_10_ids:
+        if footprints_y.user != user and footprints_y.id not in footprints_10_ids and not footprints_y.is_deleted:
             legal_footprints_30.append(footprints_y)
 
     if len(legal_footprints_10) + len(legal_footprints_30) >= next_explore_times:
@@ -78,7 +82,7 @@ def get_next_explore_footprint(next_explore_times, lon, lat, user):
 
     legal_footprints_100 = []
     for footprints_z in footprints_100:
-        if footprints_z.user != user and footprints_z.id not in footprints_30_ids:
+        if footprints_z.user != user and footprints_z.id not in footprints_30_ids and not footprints_z.is_deleted:
             legal_footprints_100.append(footprints_z)
 
     if len(legal_footprints_10) + len(legal_footprints_30) + len(legal_footprints_100) >= next_explore_times:
@@ -90,7 +94,7 @@ def get_next_explore_footprint(next_explore_times, lon, lat, user):
 
     legal_footprints_2000 = []
     for footprints_xyz in footprints_2000:
-        if footprints_xyz.user != user and footprints_xyz.id not in footprints_100_ids:
+        if footprints_xyz.user != user and footprints_xyz.id not in footprints_100_ids and not footprints_xyz.is_deleted:
             legal_footprints_2000.append(footprints_xyz)
 
     if len(legal_footprints_10) + len(legal_footprints_30) + len(legal_footprints_100) + len(legal_footprints_2000) \
@@ -100,3 +104,50 @@ def get_next_explore_footprint(next_explore_times, lon, lat, user):
 
     # 实在是获取不到就返回 None
     return None
+
+
+def build_footprint_info_for_explore(user, footprint):
+    """
+    构造用户足迹信息
+    """
+    # 先确定足迹的类型
+    if footprint.post_type == PostType.HELP:
+        footprint_type = 'help'
+    else:
+        if not footprint.image_list:
+            footprint_type = 'text'
+        else:
+            footprint_type = 'image_text'
+
+    coupon_template = {}
+    if footprint_type == 'help':
+        template = ClubCouponTemplate.objects.get(id=footprint.template_id)
+        coupon_money = 0 if template.template_type == CouponTemplateChoices.GENERAL else template.money
+
+        coupon_template = {
+            'club_id': template.club_id,
+            'avatar': template.club.avatar,
+            'club_name': template.club.name,
+            'address': template.club.address,
+            'template_id': template.id,
+            'template_name': template.name,
+            'deadline': datetime_to_str(template.deadline),
+            'coupon_money': coupon_money,
+            'has_count': get_user_coupon_count(user, template)
+        }
+
+    return {
+        # text, image_text
+        'footprint_id': footprint.id,
+        'time': time_format(footprint.created_time),
+        'user_id': footprint.user_id,
+        'name': footprint.name,
+        'avatar': footprint.avatar,
+        'location': footprint.location,
+        'content': footprint.content,
+        'image_list': footprint.image_list,
+        # help
+        'coupon_template': coupon_template,
+        # type
+        'type': footprint_type
+    }
