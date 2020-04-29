@@ -5,7 +5,7 @@ from commercial.models import Club, CommercialActivity, TopBanner, ExploreBanner
 
 
 class ClubAdmin(VersionAdmin):
-    list_display = ['id', 'name', 'address', 'telephone', 'business_type' ]
+    list_display = ['id', 'name', 'address', 'telephone', 'business_type', 'account', 'password']
     search_fields = ['=id', 'business_type', 'name']
 
 

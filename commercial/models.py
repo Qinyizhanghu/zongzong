@@ -23,6 +23,13 @@ class Club(models.Model):
     telephone = models.CharField(max_length=15, verbose_name='电话')
     lat = models.FloatField(verbose_name='维度')
     lon = models.FloatField(verbose_name='经度')
+
+    # @zhanghu
+    account = models.CharField(max_length=50, verbose_name='商家账号')
+    password = models.CharField(max_length=100, verbose_name='商家密码')
+    # 用户第一次进入商家的时候, 需要使用账号和密码登录认证, 同时, 把对应的 user_info 存到这里, 一个 Club 可以对应多个 user_info
+    user_info = ForeignKey(UserBaseInfo, on_delete=models.CASCADE, verbose_name='用户信息')
+
     created_time = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
 
