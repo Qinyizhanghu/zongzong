@@ -29,3 +29,58 @@ def last_executed_query(self, cursor, sql, params):
 6. 修改: Footprint 表新增了 template_id 字段
 7. 新增: UserCoupon 表 (用户优惠券)
 8. 修改: Club 表新增了 account、password、user_info 字段
+
+#### 1.4 执行的更新 SQL 语句
+ALTER TABLE user_info_userbaseinfo ADD extra_info varchar(1024) DEFAULT '{}' COMMENT '额外信息, json 格式';
+
+CREATE TABLE `commercial_explorebanner` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增主键',
+  `title` varchar(40) NOT NULL DEFAULT '' COMMENT '标题',
+  `description` varchar(512) NOT NULL DEFAULT '' COMMENT '描述信息',
+  `image` varchar(250) NOT NULL DEFAULT '' COMMENT '图片',
+  `is_online` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否上线',
+  `created_time` datetime(6) NOT NULL,
+  `last_modified` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='探索模式下的 Banner';
+
+
+CREATE TABLE `commercial_clubcoupontemplate` (
+    `id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY , 
+    `name` varchar (20) NOT NULL, 
+    `template_type` varchar (10) NOT NULL, 
+    `money` integer UNSIGNED NOT NULL, 
+    `threshold` integer UNSIGNED NOT NULL, 
+    `count` integer UNSIGNED NOT NULL, 
+    `balance` integer UNSIGNED NOT NULL, 
+    `is_online` bool NOT NULL, 
+    `deadline` datetime (6) NOT NULL, 
+    `created_time` datetime (6) NOT NULL, 
+    `last_modified` datetime (6) NOT NULL, 
+    `club_id` integer NOT NULL
+  );
+ALTER TABLE `commercial_clubcoupontemplate` ADD CONSTRAINT `commercial_clubcoupo_club_id_8f217160_fk_commercia` FOREIGN KEY (`club_id`) REFERENCES `commercial_club` (`id`);
+
+ALTER TABLE `footprint_footprint` ADD is_deleted tinyint(1) DEFAULT 0 COMMENT '是否被删除';
+ALTER TABLE `footprint_footprint` ADD post_type varchar(10) DEFAULT 'note' COMMENT '帖子类型';
+ALTER TABLE `footprint_footprint` ADD template_id int(11) DEFAULT 0 COMMENT '优惠券模板 id';
+
+ALTER TABLE `commercial_club` ADD account varchar(50) DEFAULT '' COMMENT '商家账号';
+ALTER TABLE `commercial_club` ADD password varchar(100) DEFAULT '' COMMENT '商家密码';
+ALTER TABLE `commercial_club` ADD user_info_id int(11) COMMENT '商家账号';
+ALTER TABLE `commercial_club` ADD CONSTRAINT `commercial_club_user_info_id_3cbc69eb_fk_user_info` FOREIGN KEY (`user_info_id`) REFERENCES `user_info_userbaseinfo` (`id`);
+
+CREATE TABLE `footprint_usercoupon` (
+    `id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY, 
+    `acquire_way` varchar (10) NOT NULL, 
+    `donate_user_id` integer NOT NULL, 
+    `coupon_code` varchar (100) NULL, 
+    `is_used` bool NOT NULL, 
+    `created_time` datetime (6) NOT NULL, 
+    `last_modified` datetime (6) NOT NULL, 
+    `template_id` integer NOT NULL, 
+    `user_id` integer NOT NULL
+  );
+ALTER TABLE `footprint_usercoupon` ADD CONSTRAINT `footprint_usercoupon_template_id_951887f1_fk_commercia` FOREIGN KEY (`template_id`) REFERENCES `commercial_clubcoupontemplate` (`id`);
+ALTER TABLE `footprint_usercoupon` ADD CONSTRAINT `footprint_usercoupon_user_id_3c884cbe_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`);
+CREATE INDEX `footprint_usercoupon_created_time_0c7d2d93` ON `footprint_usercoupon` (`created_time`);

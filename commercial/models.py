@@ -109,7 +109,7 @@ class ExploreBanner(models.Model):
 
     title = models.CharField(max_length=40, verbose_name=u'标题')
     description = models.CharField(max_length=512, verbose_name=u'描述信息')
-    image = models.CharField(max_length=250, verbose_name=u'图片啊')
+    image = models.CharField(max_length=250, verbose_name=u'图片')
     is_online = models.BooleanField(default=False, verbose_name=u'是否上线')
     created_time = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
