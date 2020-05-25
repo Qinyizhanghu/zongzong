@@ -291,3 +291,5 @@ def donate_coupon_to_others_view(request):
     acquire_new_coupon(target_user, template, acquire_way=CouponAcquireWay.DONATE,
                        donate_user_id=user.id, coupon_code=user_coupon.coupon_code)
     delete_user_coupon_by_id(user_coupon.id)
+
+    return json_http_success({})

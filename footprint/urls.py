@@ -13,7 +13,7 @@ urlpatterns = [
     path('detail/', get_footprint_detail_view),
     path('get_user_track/', get_user_footprint_track_view),
 
-    # zhanghu
+    # @zhanghu
     path('user_delete/', user_delete_footprint_view),
     path('user_help_post_pop_up/', help_post_pop_up_view),
     path('user_coupon_list/', get_user_coupon_list_view),

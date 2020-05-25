@@ -76,7 +76,7 @@ def get_explore_surplus_times_view(request):
     surplus_times = ExploreSurplusTimesManager.get_explore_day_limit() \
         - ExploreSurplusTimesManager.get_times(current_date, user_info.id)
 
-    return surplus_times if surplus_times >= 0 else 0
+    return json_http_success({"surplus_times": surplus_times if surplus_times >= 0 else 0})
 
 
 @require_GET
@@ -206,7 +206,7 @@ def favor_activity_view(request):
 def get_nearby_clubs_view(request):
     """
     获取用户 "附近的" 商家信息, 按照距离倒排
-    URL[POST]: /commercial/nearby_clubs/
+    URL[GET]: /commercial/nearby_clubs/
     """
     lon = float(request.GET.get('lon', 0))
     lat = float(request.GET.get('lat', 0))
