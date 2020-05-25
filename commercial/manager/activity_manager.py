@@ -182,5 +182,7 @@ def build_coupon_template_info(template):
         'template_name': template.name,
         'deadline': datetime_to_str(template.deadline),
         'coupon_money': coupon_money,
-        'type': 'coupon_template'
+        'type': 'coupon_template',
+        'lon': template.club.lon,
+        'lat': template.club.lat
     }

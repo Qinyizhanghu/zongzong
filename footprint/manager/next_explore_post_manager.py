@@ -133,7 +133,9 @@ def build_footprint_info_for_explore(user, footprint):
             'template_name': template.name,
             'deadline': datetime_to_str(template.deadline),
             'coupon_money': coupon_money,
-            'has_count': get_user_coupon_count(user, template)
+            'has_count': get_user_coupon_count(user, template),
+            'lon': footprint.lon,
+            'lat': footprint.lat
         }
 
     return {
@@ -149,5 +151,7 @@ def build_footprint_info_for_explore(user, footprint):
         # help
         'coupon_template': coupon_template,
         # type
-        'type': footprint_type
+        'type': footprint_type,
+        'lon': footprint.lon,
+        'lat': footprint.lat
     }

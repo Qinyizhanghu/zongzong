@@ -212,3 +212,17 @@ def get_nearby_clubs_view(request):
     lat = float(request.GET.get('lat', 0))
 
     return get_nearby_clubs_info(lon, lat)
+
+
+@csrf_exempt
+@require_POST
+@login_required
+def club_user_login(request):
+    """
+    商家用户登录
+    URL[POST]: /commercial/user_login/
+    """
+    post_data = get_data_from_request(request)
+    account = post_data['account']
+    password = post_data['password']
+
