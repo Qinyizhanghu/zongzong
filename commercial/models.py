@@ -25,13 +25,23 @@ class Club(models.Model):
     lon = models.FloatField(verbose_name='经度')
 
     # @zhanghu
+    env_images = models.CharField(max_length=4096, verbose_name='环境图, 最多支持8张, 分号隔开')
     account = models.CharField(max_length=50, verbose_name='商家账号')
     password = models.CharField(max_length=100, verbose_name='商家密码')
-    # 用户第一次进入商家的时候, 需要使用账号和密码登录认证, 同时, 把对应的 user_info 存到这里, 一个 Club 可以对应多个 user_info
-    user_info = ForeignKey(UserBaseInfo, on_delete=models.CASCADE, verbose_name='用户信息')
+    # 备注信息
+    remark = models.CharField(max_length=1000, verbose_name='商家备注')
 
     created_time = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
+
+
+class ClubUserInfo(models.Model):
+    """
+    商家关联用户信息
+    """
+    # 用户第一次进入商家的时候, 需要使用账号和密码登录认证, 同时, 把对应的 user_info 存到这里, 一个 Club 可以对应多个 user_info
+    user_info = ForeignKey(UserBaseInfo, on_delete=models.CASCADE, verbose_name='用户信息')
+    club = ForeignKey(Club, on_delete=models.CASCADE, verbose_name='商家')
 
 
 class CommercialActivity(models.Model):

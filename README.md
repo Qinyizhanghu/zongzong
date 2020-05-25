@@ -29,6 +29,9 @@ def last_executed_query(self, cursor, sql, params):
 6. 修改: Footprint 表新增了 template_id 字段
 7. 新增: UserCoupon 表 (用户优惠券)
 8. 修改: Club 表新增了 account、password、user_info 字段
+9. 修改: Club 表新增了 env_images、remark 字段
+10. 删除: Club 表删除了 user_info 字段
+11. 新增: 商家关联用户信息表 ClubUserInfo
 
 #### 1.4 执行的更新 SQL 语句
 ALTER TABLE user_info_userbaseinfo ADD extra_info varchar(1024) DEFAULT '{}' COMMENT '额外信息, json 格式';
@@ -69,6 +72,9 @@ ALTER TABLE `commercial_club` ADD account varchar(50) DEFAULT '' COMMENT '商家
 ALTER TABLE `commercial_club` ADD password varchar(100) DEFAULT '' COMMENT '商家密码';
 ALTER TABLE `commercial_club` ADD user_info_id int(11) COMMENT '商家账号';
 ALTER TABLE `commercial_club` ADD CONSTRAINT `commercial_club_user_info_id_3cbc69eb_fk_user_info` FOREIGN KEY (`user_info_id`) REFERENCES `user_info_userbaseinfo` (`id`);
+ALTER TABLE `commercial_club` DROP foreign key commercial_club_user_info_id_3cbc69eb_fk_user_info;
+ALTER TABLE `commercial_club` DROP COLUMN user_info_id;
+
 
 CREATE TABLE `footprint_usercoupon` (
     `id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY, 
@@ -84,3 +90,14 @@ CREATE TABLE `footprint_usercoupon` (
 ALTER TABLE `footprint_usercoupon` ADD CONSTRAINT `footprint_usercoupon_template_id_951887f1_fk_commercia` FOREIGN KEY (`template_id`) REFERENCES `commercial_clubcoupontemplate` (`id`);
 ALTER TABLE `footprint_usercoupon` ADD CONSTRAINT `footprint_usercoupon_user_id_3c884cbe_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`);
 CREATE INDEX `footprint_usercoupon_created_time_0c7d2d93` ON `footprint_usercoupon` (`created_time`);
+
+ALTER TABLE `commercial_club` ADD env_images varchar(4096) DEFAULT '' COMMENT '环境图, 最多支持8张, 分号隔开';
+ALTER TABLE `commercial_club` ADD remark varchar(1000) DEFAULT '' COMMENT '商家备注';
+
+CREATE TABLE `commercial_clubuserinfo` (
+    `id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY , 
+    `club_id` integer NOT NULL, 
+    `user_info_id` integer NOT NULL
+  );
+ALTER TABLE `commercial_clubuserinfo` ADD CONSTRAINT `commercial_clubuserinfo_club_id_8d0c937b_fk_commercial_club_id` FOREIGN KEY (`club_id`) REFERENCES `commercial_club` (`id`);
+ALTER TABLE `commercial_clubuserinfo` ADD CONSTRAINT `commercial_clubuseri_user_info_id_008f4af8_fk_user_info` FOREIGN KEY (`user_info_id`) REFERENCES `user_info_userbaseinfo` (`id`);
