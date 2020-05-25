@@ -56,7 +56,7 @@ def build_activity_info(activity, position):
     return {
         'activity_id': activity.id,
         'name': activity.name,
-        'avatar': activity.club.avatar,
+        'avatar': str(activity.club.avatar),
         'quota': '【{}/{}】'.format(activity.participant_num, activity.total_quota),
         'description': activity.description,
         'lat': position[1],
