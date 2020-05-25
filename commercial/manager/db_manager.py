@@ -1,4 +1,4 @@
-from commercial.models import CommercialActivity, Club, ActivityParticipant, ClubCouponTemplate
+from commercial.models import CommercialActivity, Club, ActivityParticipant, ClubCouponTemplate, ClubUserInfo
 
 
 def get_commercial_activity_by_id_db(activity_id):
@@ -21,6 +21,17 @@ def get_club_by_id_db(club_id):
         return Club.objects.get(id=club_id)
     except Club.DoesNotExist:
         return None
+
+
+def get_club_by_account_and_password(account, password):
+    try:
+        return Club.objects.get(account=account, password=password)
+    except Club.DoesNotExist:
+        return None
+
+
+def create_club_user_info_by_user_info_and_club(user_info, club):
+    return ClubUserInfo.objects.get_or_create(user_info=user_info, club=club)
 
 
 def get_coupon_template_by_id_db(template_id):

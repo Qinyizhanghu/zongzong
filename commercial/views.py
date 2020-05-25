@@ -8,6 +8,7 @@ from commercial.manager.banner_manager import get_top_banner_db, build_top_banne
 from commercial.manager.activity_manager import build_club_info, \
     build_activity_detail, participate_activity, \
     build_activity_brief_info, get_nearby_clubs_info
+from commercial.manager.club_user_manager import club_user_login
 from commercial.manager.db_manager import get_commercial_activity_by_id_db, get_commercial_activities_by_club_id_db, \
     get_club_by_id_db
 from commercial.manager.explore_banner_manager import build_explore_banner, get_explore_banner_db, homepage_pop_up_info
@@ -217,7 +218,7 @@ def get_nearby_clubs_view(request):
 @csrf_exempt
 @require_POST
 @login_required
-def club_user_login(request):
+def club_user_login_view(request):
     """
     商家用户登录
     URL[POST]: /commercial/user_login/
@@ -225,4 +226,13 @@ def club_user_login(request):
     post_data = get_data_from_request(request)
     account = post_data['account']
     password = post_data['password']
+
+    user_info = get_user_info_by_user_id_db(request.user.id)
+
+    club_user_info_id = club_user_login(account, password, user_info)
+    if not club_user_info_id:
+        return json_http_error(u'用户名或密码错误')
+    return json_http_success({})
+
+
 
