@@ -97,7 +97,9 @@ ALTER TABLE `commercial_club` ADD remark varchar(1000) DEFAULT '' COMMENT 'å•†å®
 CREATE TABLE `commercial_clubuserinfo` (
     `id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY , 
     `club_id` integer NOT NULL, 
-    `user_info_id` integer NOT NULL
+    `user_info_id` integer NOT NULL,
+    `created_time` datetime (6) NOT NULL, 
+    `last_modified` datetime (6) NOT NULL 
   );
 ALTER TABLE `commercial_clubuserinfo` ADD CONSTRAINT `commercial_clubuserinfo_club_id_8d0c937b_fk_commercial_club_id` FOREIGN KEY (`club_id`) REFERENCES `commercial_club` (`id`);
 ALTER TABLE `commercial_clubuserinfo` ADD CONSTRAINT `commercial_clubuseri_user_info_id_008f4af8_fk_user_info` FOREIGN KEY (`user_info_id`) REFERENCES `user_info_userbaseinfo` (`id`);

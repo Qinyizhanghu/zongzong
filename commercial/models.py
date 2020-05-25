@@ -43,6 +43,9 @@ class ClubUserInfo(models.Model):
     user_info = ForeignKey(UserBaseInfo, on_delete=models.CASCADE, verbose_name='用户信息')
     club = ForeignKey(Club, on_delete=models.CASCADE, verbose_name='商家')
 
+    created_time = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True)
+
 
 class CommercialActivity(models.Model):
     # 商业活动
