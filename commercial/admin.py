@@ -34,7 +34,7 @@ admin.site.register(ExploreBanner, ExploreBannerAdmin)
 
 
 class ClubCouponTemplateAdmin(VersionAdmin):
-    list_display = ['name', 'type', 'club', 'money', 'threshold', 'count', 'is_online', 'deadline']
+    list_display = ['name', 'template_type', 'club', 'money', 'threshold', 'count', 'is_online', 'deadline']
 
 
 admin.site.register(ClubCouponTemplate, ClubCouponTemplateAdmin)
