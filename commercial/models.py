@@ -54,6 +54,7 @@ class CouponChargeOffRecord(models.Model):
     """
     club_user = ForeignKey(ClubUserInfo, on_delete=models.CASCADE, verbose_name='商家关联的用户')
     coupon = ForeignKey(UserCoupon, on_delete=models.CASCADE, verbose_name='商家关联的用户')
+    user_id = models.IntegerField(verbose_name=u'优惠券使用者 id')
 
     created_time = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)

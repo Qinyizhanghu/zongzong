@@ -8,7 +8,8 @@ from commercial.manager.banner_manager import get_top_banner_db, build_top_banne
 from commercial.manager.activity_manager import build_club_info, \
     build_activity_detail, participate_activity, \
     build_activity_brief_info, get_nearby_clubs_info
-from commercial.manager.club_user_manager import club_user_login, charge_off_user_coupon
+from commercial.manager.club_user_manager import club_user_login, charge_off_user_coupon, \
+    build_user_coupon_info_for_charge_off
 from commercial.manager.db_manager import get_commercial_activity_by_id_db, get_commercial_activities_by_club_id_db, \
     get_club_by_id_db
 from commercial.manager.explore_banner_manager import build_explore_banner, get_explore_banner_db, homepage_pop_up_info
@@ -233,6 +234,22 @@ def club_user_login_view(request):
     if not club_user_info:
         return json_http_error(u'用户名或密码错误')
     return json_http_success({'club_id': club_user_info.club.id})
+
+
+@require_GET
+@login_required
+def get_user_coupon_info_for_charge_off_view(request):
+    """
+    展示用户优惠券的信息 --> 用来核销的商户查看, 所以, 只会传递 coupon_code
+    URL[GET]: /commercial/user_coupon_info_for_charge_off/
+    """
+    club_id = int(request.GET['club_id'])
+    coupon_code = request.GET['coupon_code']
+
+    coupon_info = build_user_coupon_info_for_charge_off(club_id, coupon_code)
+    if not coupon_info:
+        return json_http_error(u'优惠券码错误')
+    return json_http_success(coupon_info)
 
 
 @csrf_exempt
