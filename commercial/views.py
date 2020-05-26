@@ -9,7 +9,7 @@ from commercial.manager.activity_manager import build_club_info, \
     build_activity_detail, participate_activity, \
     build_activity_brief_info, get_nearby_clubs_info
 from commercial.manager.club_user_manager import club_user_login, charge_off_user_coupon, \
-    build_user_coupon_info_for_charge_off
+    build_user_coupon_info_for_charge_off, build_club_consume_user_coupon_info
 from commercial.manager.db_manager import get_commercial_activity_by_id_db, get_commercial_activities_by_club_id_db, \
     get_club_by_id_db
 from commercial.manager.explore_banner_manager import build_explore_banner, get_explore_banner_db, homepage_pop_up_info
@@ -270,3 +270,17 @@ def club_charge_off_user_coupon_view(request):
     if not charge_off_result:
         return json_http_success({'club_id': club_id})
     return json_http_error(charge_off_result)
+
+
+@require_GET
+@login_required
+def club_consume_user_coupon_info_view(request):
+    """
+    商户消耗用户优惠券详情
+    URL[GET]: /commercial/consume_user_coupon_info/
+    """
+    club_id = int(request.GET['club_id'])
+    consume_result = build_club_consume_user_coupon_info(club_id)
+    if not consume_result:
+        return json_http_error(u'找不到商家信息')
+    return json_http_success(consume_result)

@@ -1,4 +1,5 @@
-from commercial.models import CommercialActivity, Club, ActivityParticipant, ClubCouponTemplate, ClubUserInfo
+from commercial.models import CommercialActivity, Club, ActivityParticipant, ClubCouponTemplate, ClubUserInfo, \
+    CouponChargeOffRecord
 
 
 def get_commercial_activity_by_id_db(activity_id):
@@ -39,6 +40,14 @@ def get_club_user_info_by_user_info_and_club(user_info, club):
 
 def create_club_user_info_by_user_info_and_club(user_info, club):
     return ClubUserInfo.objects.get_or_create(user_info=user_info, club=club)
+
+
+def get_club_user_info_by_club(club_id):
+    return ClubUserInfo.objects.filter(club_id=club_id)
+
+
+def get_charge_off_record_by_club_user_infos(club_user_infos):
+    return CouponChargeOffRecord.objects.filter(club_user__in=club_user_infos).order_by('-created_time')
 
 
 def get_coupon_template_by_id_db(template_id):

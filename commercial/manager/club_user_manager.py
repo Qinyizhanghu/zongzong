@@ -10,7 +10,8 @@ import logging
 
 from commercial.const import CouponTemplateChoices
 from commercial.manager.db_manager import get_club_by_account_and_password, create_club_user_info_by_user_info_and_club, \
-    get_club_by_id_db, get_club_user_info_by_user_info_and_club
+    get_club_by_id_db, get_club_user_info_by_user_info_and_club, get_club_user_info_by_club, \
+    get_charge_off_record_by_club_user_infos
 from commercial.models import CouponChargeOffRecord
 from footprint.manager.coupon_manager import get_user_coupon_by_coupon_code, charge_off_coupon
 from user_info.manager.user_info_mananger import get_user_info_by_user_id_db
@@ -96,3 +97,54 @@ def charge_off_user_coupon(coupon_code, club_id, user_info):
     logging.info('charge off user coupon: %s, %s, %s', club.id, user_coupon.id, coupon_charge_off_record.id)
 
     return u''
+
+
+def build_club_consume_user_coupon_info(club_id):
+    """
+    构造商户消耗用户优惠券详情
+    """
+    club = get_club_by_id_db(club_id)
+    if not club:
+        return None
+
+    club_user_infos = get_club_user_info_by_club(club_id)
+    charge_off_records = get_charge_off_record_by_club_user_infos(club_user_infos)
+    money, consume_infos = build_club_consume_infos(charge_off_records)
+
+    return {
+        'club_info': {
+            'avatar': club.avatar,
+            'name': club.name,
+            'address': club.address,
+            'telephone': club.telephone,
+            'club_id': club.id,
+        },
+        'consume_sum': {
+            'count': len(consume_infos),
+            'money': money
+        },
+        'consume_infos': consume_infos
+    }
+
+
+def build_club_consume_infos(charge_off_records):
+    """
+    构造商户消耗优惠券的信息
+    """
+    money = 0
+    consume_infos = []
+
+    for record in charge_off_records:
+        coupon_money = 0 if record.coupon.template.template_type == CouponTemplateChoices.GENERAL \
+            else record.coupon.template.money
+        consume_infos.append(
+            {
+                'nickname': get_user_info_by_user_id_db(record.coupon.user_id).nickname,
+                'coupon_money': coupon_money,
+                'confirm_user': record.club_user.user_info.nickname,
+                'confirm_time': datetime_to_str(record.created_time, '%m-%d %H:%M')
+            }
+        )
+        money += coupon_money
+
+    return money, consume_infos
