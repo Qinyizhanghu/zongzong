@@ -4,7 +4,8 @@ from geopy.distance import geodesic
 
 from commercial.const import CouponTemplateChoices
 from commercial.manager.db_manager import get_commercial_activity_by_id_db, create_activity_participate_record_db, \
-    get_club_by_ids_db
+    get_club_by_ids_db, get_club_by_id_db, get_commercial_activities_by_club, \
+    get_activity_participate_by_activity_and_confirm
 from commercial.models import CommercialActivity, ActivityParticipant, ClubCouponTemplate
 from footprint.manager.footprint_manager import is_user_favored
 from footprint.models import FlowType
@@ -148,8 +149,10 @@ def participate_activity(activity_id, user_info_id, name, cellphone, num, hint):
     record, created = create_activity_participate_record_db(activity_id, user_info_id, name, cellphone, num, hint)
     if not created:
         return u'请勿重复报名'
-    activity.participant_num += 1
-    activity.save()
+
+    # @zhanghu 用户的预约需要商户确认之后才增加报名人数, 这里只是记录用户预约, 不增加人数
+    # activity.participant_num += num
+    # activity.save()
     return ''
 
 
@@ -186,4 +189,41 @@ def build_coupon_template_info(template):
         'type': 'coupon_template',
         'lon': template.club.lon,
         'lat': template.club.lat
+    }
+
+
+def build_club_activity_confirm_info(club_id, is_confirm):
+    """
+    构造商户活动预约确认信息
+    """
+    club = get_club_by_id_db(club_id)
+    if not club:
+        return None
+
+    commercial_activities = get_commercial_activities_by_club(club)
+    activity_participates = get_activity_participate_by_activity_and_confirm(commercial_activities, is_confirm)
+
+    return {
+        'club_info': {
+            'avatar': club.avatar,
+            'name': club.name,
+            'address': club.address,
+            'telephone': club.telephone,
+            'club_id': club.id,
+        },
+        'activity_participant_info': [build_activity_participant_info(record) for record in activity_participates]
+    }
+
+
+def build_activity_participant_info(activity_participant):
+    """
+    构造用户预约信息
+    """
+    return {
+        'nickname': activity_participant.user_info.nickname,
+        'activity_name': activity_participant.activity.name,
+        'user_num': activity_participant.num,
+        'time_detail': activity_participant.activity.time_detail,
+        'participant_num': activity_participant.activity.participant_num,
+        'total_quota': activity_participant.activity.total_quota
     }

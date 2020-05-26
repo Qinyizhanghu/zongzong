@@ -7,7 +7,7 @@ from django.views.decorators.http import require_GET, require_POST
 from commercial.manager.banner_manager import get_top_banner_db, build_top_banner
 from commercial.manager.activity_manager import build_club_info, \
     build_activity_detail, participate_activity, \
-    build_activity_brief_info, get_nearby_clubs_info
+    build_activity_brief_info, get_nearby_clubs_info, build_club_activity_confirm_info
 from commercial.manager.club_user_manager import club_user_login, charge_off_user_coupon, \
     build_user_coupon_info_for_charge_off, build_club_consume_user_coupon_info
 from commercial.manager.db_manager import get_commercial_activity_by_id_db, get_commercial_activities_by_club_id_db, \
@@ -284,3 +284,22 @@ def club_consume_user_coupon_info_view(request):
     if not consume_result:
         return json_http_error(u'找不到商家信息')
     return json_http_success(consume_result)
+
+
+@require_GET
+@login_required
+def club_activity_confirm_info_view(request):
+    """
+    商户活动预约确认/未确认信息详情
+    URL[GET]: /commercial/activity_confirm_info/
+    """
+    club_id = int(request.GET['club_id'])
+    is_confirm = bool(int(request.GET['is_confirm']))   # 0-未确认; 1-已确认
+
+    confirm_info = build_club_activity_confirm_info(club_id, is_confirm)
+    if not confirm_info:
+        return json_http_error(u'找不到商家信息')
+    return json_http_success(confirm_info)
+
+
+

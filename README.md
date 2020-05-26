@@ -33,6 +33,7 @@ def last_executed_query(self, cursor, sql, params):
 10. 删除: Club 表删除了 user_info 字段
 11. 新增: 商家关联用户信息表 ClubUserInfo
 12. 新增: 优惠券核销记录表 CouponChargeOffRecord
+13. 修改: ActivityParticipant 表新增了 is_confirm 字段
 
 #### 1.4 执行的更新 SQL 语句
 ALTER TABLE user_info_userbaseinfo ADD extra_info varchar(1024) DEFAULT '{}' COMMENT '额外信息, json 格式';

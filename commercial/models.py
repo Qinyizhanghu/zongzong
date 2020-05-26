@@ -99,12 +99,15 @@ class ActivityParticipant(models.Model):
     # 活动参加者
     def __unicode__(self):
         return '{}__{}'.format(self.activity.name, self.user_info.nickname)
+
     activity = ForeignKey(CommercialActivity, on_delete=models.CASCADE, help_text='活动')
     user_info = ForeignKey(UserBaseInfo, on_delete=models.CASCADE, verbose_name='用户信息')
     name = models.CharField(max_length=40, verbose_name='标题')
     cellphone = models.CharField(max_length=20, verbose_name='标题')
     num = models.IntegerField(default=1, verbose_name='人数')
     hint = models.CharField(max_length=200, verbose_name=u'备注')
+
+    is_confirm = models.BooleanField(default=False, verbose_name='预约是否被商家确认, 默认是未确认')
 
 
 class TopBanner(models.Model):

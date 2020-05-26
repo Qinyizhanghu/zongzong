@@ -17,6 +17,10 @@ def get_commercial_activities_by_club_id_db(club_id, start, end):
     return CommercialActivity.objects.filter(club_id=club_id).order_by('-created_time')[start: end]
 
 
+def get_commercial_activities_by_club(club):
+    return CommercialActivity.objects.filter(club=club).order_by('-created_time')
+
+
 def get_club_by_id_db(club_id):
     try:
         return Club.objects.get(id=club_id)
@@ -65,3 +69,7 @@ def create_activity_participate_record_db(activity_id, user_info_id, name, cellp
     return ActivityParticipant.objects.get_or_create(activity_id=activity_id, user_info_id=user_info_id, defaults={
         'name': name, 'cellphone': cellphone, 'num': num, 'hint': hint
     })
+
+
+def get_activity_participate_by_activity_and_confirm(commercial_activities, is_confirm):
+    return ActivityParticipant.objects.filter(activity__in=commercial_activities, is_confirm=is_confirm)
