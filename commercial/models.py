@@ -2,7 +2,6 @@ from django.db import models
 from django.db.models import ForeignKey
 
 from commercial.const import CouponTemplateChoices
-from footprint.models import UserCoupon
 from user_info.models import UserBaseInfo
 
 
@@ -53,7 +52,7 @@ class CouponChargeOffRecord(models.Model):
     优惠券核销记录表
     """
     club_user = ForeignKey(ClubUserInfo, on_delete=models.CASCADE, verbose_name='商家关联的用户')
-    coupon = ForeignKey(UserCoupon, on_delete=models.CASCADE, verbose_name='商家关联的用户')
+    coupon_id = models.IntegerField(verbose_name=u'优惠券 id')
     user_id = models.IntegerField(verbose_name=u'优惠券使用者 id')
 
     created_time = models.DateTimeField(auto_now_add=True)

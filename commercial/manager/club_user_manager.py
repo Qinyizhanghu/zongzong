@@ -91,7 +91,7 @@ def charge_off_user_coupon(coupon_code, club_id, user_info):
         return u'商户账号不存在'
 
     coupon_charge_off_record = CouponChargeOffRecord.objects.create(
-        club_user=club_user_info, coupon=user_coupon, user_id=user_coupon.user.id
+        club_user=club_user_info, coupon_id=user_coupon.id, user_id=user_coupon.user.id
     )
     charge_off_coupon(user_coupon)  # 除了记录之外, 还需要核销优惠券自身
     logging.info('charge off user coupon: %s, %s, %s', club.id, user_coupon.id, coupon_charge_off_record.id)
