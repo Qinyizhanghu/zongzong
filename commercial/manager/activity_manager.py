@@ -5,7 +5,7 @@ from geopy.distance import geodesic
 from commercial.const import CouponTemplateChoices
 from commercial.manager.db_manager import get_commercial_activity_by_id_db, create_activity_participate_record_db, \
     get_club_by_ids_db, get_club_by_id_db, get_commercial_activities_by_club, \
-    get_activity_participate_by_activity_and_confirm
+    get_activity_participate_by_activity_and_confirm, get_activity_participate_by_id
 from commercial.models import CommercialActivity, ActivityParticipant, ClubCouponTemplate
 from footprint.manager.footprint_manager import is_user_favored
 from footprint.models import FlowType
@@ -220,6 +220,7 @@ def build_activity_participant_info(activity_participant):
     构造用户预约信息
     """
     return {
+        'activity_participant_id': activity_participant.id,
         'nickname': activity_participant.user_info.nickname,
         'activity_name': activity_participant.activity.name,
         'user_num': activity_participant.num,
@@ -227,3 +228,24 @@ def build_activity_participant_info(activity_participant):
         'participant_num': activity_participant.activity.participant_num,
         'total_quota': activity_participant.activity.total_quota
     }
+
+
+def club_confirm_activity_participant(activity_participant_id):
+    """
+    商户确认用户预约
+    """
+    activity_participant = get_activity_participate_by_id(activity_participant_id)
+    if not activity_participant_id:
+        return u'找不到预约活动'
+
+    if activity_participant.activity.participant_num + activity_participant.num \
+            > activity_participant.activity.total_quota:
+        return u'预约人数已满'
+
+    activity_participant.is_confirm = True
+    activity_participant.save()
+
+    activity_participant.activity.participant_num += activity_participant.num
+    activity_participant.activity.save()
+
+    return u''

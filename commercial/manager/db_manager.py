@@ -73,3 +73,10 @@ def create_activity_participate_record_db(activity_id, user_info_id, name, cellp
 
 def get_activity_participate_by_activity_and_confirm(commercial_activities, is_confirm):
     return ActivityParticipant.objects.filter(activity__in=commercial_activities, is_confirm=is_confirm)
+
+
+def get_activity_participate_by_id(activity_participant_id):
+    try:
+        return ActivityParticipant.objects.get(id=activity_participant_id)
+    except ActivityParticipant.DoesNotExist:
+        return None

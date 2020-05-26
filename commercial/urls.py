@@ -4,7 +4,7 @@ from commercial.views import get_club_info_view, activity_detail_view, \
     get_top_banner_view, participate_activity_view, get_club_activities_info, favor_activity_view, \
     get_explore_banner_view, get_explore_surplus_times_view, get_nearby_clubs_view, club_user_login_view, \
     club_charge_off_user_coupon_view, get_user_coupon_info_for_charge_off_view, club_consume_user_coupon_info_view, \
-    club_activity_confirm_info_view
+    club_activity_confirm_info_view, club_confirm_activity_participant_view
 
 urlpatterns = [
     # @zhanghu
@@ -17,6 +17,7 @@ urlpatterns = [
     path('user_coupon_info_for_charge_off/', get_user_coupon_info_for_charge_off_view),
     path('consume_user_coupon_info/', club_consume_user_coupon_info_view),
     path('activity_confirm_info/', club_activity_confirm_info_view),
+    path('confirm_activity_participant/', club_confirm_activity_participant_view),
 
     path('get_club_info/', get_club_info_view),
     path('get_activity_detail/', activity_detail_view),

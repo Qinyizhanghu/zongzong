@@ -115,3 +115,5 @@ CREATE TABLE `commercial_couponchargeoffrecord` (
     `club_user_id` integer NOT NULL
   );
 ALTER TABLE `commercial_couponchargeoffrecord` ADD CONSTRAINT `commercial_couponcha_club_user_id_57e92a78_fk_commercia` FOREIGN KEY (`club_user_id`) REFERENCES `commercial_clubuserinfo` (`id`); 
+
+ALTER TABLE `commercial_activityparticipant` ADD is_confirm tinyint(1) DEFAULT 0 COMMENT '预约是否被商家确认, 默认是未确认';
