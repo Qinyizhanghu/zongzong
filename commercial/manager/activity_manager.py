@@ -142,7 +142,8 @@ def build_activity_detail(activity, user_id):
 
 def participate_activity(activity_id, user_info_id, name, cellphone, num, hint):
     activity = get_commercial_activity_by_id_db(activity_id)
-    if activity.participant_num >= activity.total_quota:
+    # 已经报名数 + 当前想要报名数
+    if activity.participant_num + num > activity.total_quota:
         return '人数已满'
     record, created = create_activity_participate_record_db(activity_id, user_info_id, name, cellphone, num, hint)
     if not created:

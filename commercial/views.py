@@ -157,7 +157,7 @@ def participate_activity_view(request):
     activity_id = post_data['activity_id']
     name = post_data['name']
     cellphone = post_data['cellphone']
-    num = int(post_data['cellphone'])
+    num = int(post_data['num'])
     hint = post_data['hint']
     user_info = get_user_info_by_user_id_db(user.id)
     error_msg = participate_activity(activity_id, user_info.id, name, cellphone, num, hint)
