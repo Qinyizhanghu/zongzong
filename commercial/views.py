@@ -8,7 +8,7 @@ from commercial.manager.banner_manager import get_top_banner_db, build_top_banne
 from commercial.manager.activity_manager import build_club_info, \
     build_activity_detail, participate_activity, \
     build_activity_brief_info, get_nearby_clubs_info
-from commercial.manager.club_user_manager import club_user_login
+from commercial.manager.club_user_manager import club_user_login, charge_off_user_coupon
 from commercial.manager.db_manager import get_commercial_activity_by_id_db, get_commercial_activities_by_club_id_db, \
     get_club_by_id_db
 from commercial.manager.explore_banner_manager import build_explore_banner, get_explore_banner_db, homepage_pop_up_info
@@ -229,10 +229,27 @@ def club_user_login_view(request):
 
     user_info = get_user_info_by_user_id_db(request.user.id)
 
-    club_user_info_id = club_user_login(account, password, user_info)
-    if not club_user_info_id:
+    club_user_info = club_user_login(account, password, user_info)
+    if not club_user_info:
         return json_http_error(u'用户名或密码错误')
-    return json_http_success({})
+    return json_http_success({'club_id': club_user_info.club.id})
 
 
+@csrf_exempt
+@require_POST
+@login_required
+def club_charge_off_user_coupon_view(request):
+    """
+    商家核销用户优惠券
+    URL[POST]: /commercial/club_charge_off/
+    """
+    post_data = get_data_from_request(request)
+    coupon_code = post_data['coupon_code']
+    club_id = post_data['club_id']
 
+    user_info = get_user_info_by_user_id_db(request.user.id)
+
+    charge_off_result = charge_off_user_coupon(coupon_code, club_id, user_info)
+    if not charge_off_result:
+        return json_http_success({'club_id': club_id})
+    return json_http_error(charge_off_result)

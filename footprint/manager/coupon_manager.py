@@ -126,6 +126,25 @@ def get_user_coupon_by_template(user, template):
     return UserCoupon.objects.filter(user=user, template=template, is_used=False)
 
 
+def get_user_coupon_by_coupon_code(coupon_code):
+    """
+    根据优惠券码获取优惠券
+    规定: 优惠券码必须是全局唯一的
+    """
+    try:
+        return UserCoupon.objects.get(coupon_code=coupon_code)
+    except UserCoupon.DoesNotExist:
+        return None
+
+
+def charge_off_coupon(coupon):
+    """
+    核销优惠券
+    """
+    coupon.is_used = True
+    coupon.save()
+
+
 def delete_user_coupon_by_id(coupon_id):
     """
     根据 id 删除用户优惠券

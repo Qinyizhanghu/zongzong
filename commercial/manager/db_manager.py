@@ -30,6 +30,13 @@ def get_club_by_account_and_password(account, password):
         return None
 
 
+def get_club_user_info_by_user_info_and_club(user_info, club):
+    try:
+        return ClubUserInfo.objects.get(user_info=user_info, club=club)
+    except ClubUserInfo.DoesNotExist:
+        return None
+
+
 def create_club_user_info_by_user_info_and_club(user_info, club):
     return ClubUserInfo.objects.get_or_create(user_info=user_info, club=club)
 

@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models import ForeignKey
 
 from commercial.const import CouponTemplateChoices
+from footprint.models import UserCoupon
 from user_info.models import UserBaseInfo
 
 
@@ -42,6 +43,17 @@ class ClubUserInfo(models.Model):
     # 用户第一次进入商家的时候, 需要使用账号和密码登录认证, 同时, 把对应的 user_info 存到这里, 一个 Club 可以对应多个 user_info
     user_info = ForeignKey(UserBaseInfo, on_delete=models.CASCADE, verbose_name='用户信息')
     club = ForeignKey(Club, on_delete=models.CASCADE, verbose_name='商家')
+
+    created_time = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True)
+
+
+class CouponChargeOffRecord(models.Model):
+    """
+    优惠券核销记录表
+    """
+    club_user = ForeignKey(ClubUserInfo, on_delete=models.CASCADE, verbose_name='商家关联的用户')
+    coupon = ForeignKey(UserCoupon, on_delete=models.CASCADE, verbose_name='商家关联的用户')
 
     created_time = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
