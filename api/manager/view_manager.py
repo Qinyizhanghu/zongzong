@@ -106,6 +106,7 @@ def build_footprint_for_flow(footprint, user_id, lon, lat):
         'user_id': footprint.user_id,
         'favored': is_user_favored(user_id, footprint.id, FlowType.FOOTPRINT),
         'favor_num': footprint.favor_num,
+        'post_type': footprint.post_type
     }
 
 
