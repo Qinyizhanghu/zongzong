@@ -214,7 +214,7 @@ def get_nearby_clubs_view(request):
     lon = float(request.GET.get('lon', 0))
     lat = float(request.GET.get('lat', 0))
 
-    return get_nearby_clubs_info(lon, lat)
+    return json_http_success(get_nearby_clubs_info(lon, lat))
 
 
 @csrf_exempt
