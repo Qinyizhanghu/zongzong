@@ -41,7 +41,9 @@ def build_nearby_club_info(club, lon, lat):
         "name": club.name,
         "address": club.address,
         "avatar": club.avatar,
-        "distance": haversine(lon, lat, club.lon, club.lat)
+        "distance": haversine(lon, lat, club.lon, club.lat),
+        'lon': club.lon,
+        'lat': club.lat
     }
 
 
