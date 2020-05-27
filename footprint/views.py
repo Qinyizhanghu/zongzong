@@ -191,7 +191,7 @@ def get_user_coupon_list_view(request):
     获取用户优惠券列表信息
     /footprint/user_coupon_list/
     """
-    return json_http_success(build_user_coupon_list_info(request.user))
+    return json_http_success({'coupons': build_user_coupon_list_info(request.user)})
 
 
 @require_GET
