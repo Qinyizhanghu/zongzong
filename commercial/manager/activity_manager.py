@@ -29,7 +29,8 @@ def get_nearby_clubs_info(lon, lat):
     club_infos = [build_nearby_club_info(club, lon, lat) for club in clubs]
 
     # 按照距离从近到远去展示出来
-    return club_infos.sort(key=lambda info: info['distance'])
+    club_infos.sort(key=lambda info: info['distance'])
+    return club_infos
 
 
 def build_nearby_club_info(club, lon, lat):
