@@ -336,3 +336,6 @@ def club_update_detail_view(request):
     """
     商户更新自己的头像信息
     """
+
+
+

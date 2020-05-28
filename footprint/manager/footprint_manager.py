@@ -153,7 +153,7 @@ def build_comment(comment):
     }
 
 
-def build_footprint_detail(footprint, user_id):
+def build_footprint_detail(footprint, user):
     """
     展示的痕迹详情，包括
     1、用户头像、用户名、时间、距离自己，是否关注
@@ -188,13 +188,18 @@ def build_footprint_detail(footprint, user_id):
         'reply_num': footprint.comment_num,
         'forward_num': footprint.forward_num,
         'show_time': get_time_show(footprint.created_time),
-        'favored': is_user_favored(user_id, footprint.id, FlowType.FOOTPRINT),
+        'favored': is_user_favored(user.id, footprint.id, FlowType.FOOTPRINT),
     }
     comment_list = get_footprint_comment_list(footprint.id, 0, 20)
     comment_data = {'comments': [build_comment(comment) for comment in comment_list]}
     result = user_info_data
     result.update(foot_print_data)
     result.update(comment_data)
+
+    if footprint.post_type == 'help':
+        from api.manager.view_manager import build_coupon_template_info
+        result.update({'coupon_template': build_coupon_template_info(user, footprint.template_id)})
+
     return result
 
 

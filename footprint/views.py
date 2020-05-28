@@ -120,7 +120,7 @@ def get_footprint_detail_view(request):
     """
     footprint_id = request.GET.get('footprint_id')
     footprint = get_footprint_by_id_db(footprint_id)
-    footprint_detail = build_footprint_detail(footprint, request.user.id)
+    footprint_detail = build_footprint_detail(footprint, request.user)
     return json_http_success(footprint_detail)
 
 
