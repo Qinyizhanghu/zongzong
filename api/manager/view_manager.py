@@ -123,7 +123,8 @@ def build_coupon_template_info(user, template_id):
     return {
         'name': template.club.name,
         'has_count': get_user_coupon_count(user, template),
-        'coupon_type': u'普适券' if template.template_type == CouponTemplateChoices.GENERAL else u'满减券'
+        'coupon_type': u'普适券' if template.template_type == CouponTemplateChoices.GENERAL else u'满减券',
+        'template_id': template_id
     }
 
 
