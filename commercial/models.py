@@ -24,6 +24,10 @@ class Club(models.Model):
     lat = models.FloatField(verbose_name='维度')
     lon = models.FloatField(verbose_name='经度')
 
+    # V2 中添加
+    principal = models.CharField(max_length=20, verbose_name='商家负责人')
+    license = models.ImageField(verbose_name='商家证件(营业执照)', blank=True, null=True)
+
     # @zhanghu
     env_images = models.CharField(max_length=4096, verbose_name='环境图, 最多支持8张, 分号隔开')
     account = models.CharField(max_length=50, verbose_name='商家账号')

@@ -49,7 +49,7 @@ def build_user_coupon_info_for_charge_off(club_id, coupon_code):
 
     return {
         'club_info': {
-            'avatar': club.avatar,
+            'avatar': club.avatar.url,
             'name': club.name,
             'address': club.address,
             'telephone': club.telephone,
@@ -113,7 +113,7 @@ def build_club_consume_user_coupon_info(club_id):
 
     return {
         'club_info': {
-            'avatar': club.avatar,
+            'avatar': club.avatar.url,
             'name': club.name,
             'address': club.address,
             'telephone': club.telephone,
@@ -148,3 +148,23 @@ def build_club_consume_infos(charge_off_records):
         money += coupon_money
 
     return money, consume_infos
+
+
+def build_club_detail_info(club_id):
+    """
+    构造商户的详细信息
+    """
+    club = get_club_by_id_db(club_id)
+    assert club is not None
+
+    return {
+        'avatar': club.avatar.url,
+        'name': club.name,
+        'address': club.address,
+        'telephone': club.telephone,
+        'club_id': club.id,
+        'principal': club.principal,
+        'representative': club.representative,
+        'license': club.license.url,
+        'remark': club.remark
+    }

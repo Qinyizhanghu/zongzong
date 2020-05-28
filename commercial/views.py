@@ -10,7 +10,7 @@ from commercial.manager.activity_manager import build_club_info, \
     build_activity_brief_info, get_nearby_clubs_info, build_club_activity_confirm_info, \
     club_confirm_activity_participant
 from commercial.manager.club_user_manager import club_user_login, charge_off_user_coupon, \
-    build_user_coupon_info_for_charge_off, build_club_consume_user_coupon_info
+    build_user_coupon_info_for_charge_off, build_club_consume_user_coupon_info, build_club_detail_info
 from commercial.manager.db_manager import get_commercial_activity_by_id_db, get_commercial_activities_by_club_id_db, \
     get_club_by_id_db
 from commercial.manager.explore_banner_manager import build_explore_banner, get_explore_banner_db, homepage_pop_up_info
@@ -318,3 +318,21 @@ def club_confirm_activity_participant_view(request):
     if confirm_info:
         return json_http_error(confirm_info)
     return json_http_success({})
+
+
+@require_GET
+# @login_required
+def get_club_detail_view(request):
+    """
+    商户查看自己的信息
+    """
+    return json_http_success(build_club_detail_info(int(request.GET['club_id'])))
+
+
+@csrf_exempt
+@require_POST
+@login_required
+def club_update_detail_view(request):
+    """
+    商户更新自己的头像信息
+    """

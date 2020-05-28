@@ -34,6 +34,7 @@ def last_executed_query(self, cursor, sql, params):
 11. 新增: 商家关联用户信息表 ClubUserInfo
 12. 新增: 优惠券核销记录表 CouponChargeOffRecord
 13. 修改: ActivityParticipant 表新增了 is_confirm 字段
+14. 修改: Club 表新增了 principal、license 字段
 
 #### 1.4 执行的更新 SQL 语句
 ALTER TABLE user_info_userbaseinfo ADD extra_info varchar(1024) DEFAULT '{}' COMMENT '额外信息, json 格式';
@@ -95,6 +96,8 @@ CREATE INDEX `footprint_usercoupon_created_time_0c7d2d93` ON `footprint_usercoup
 
 ALTER TABLE `commercial_club` ADD env_images varchar(4096) DEFAULT '' COMMENT '环境图, 最多支持8张, 分号隔开';
 ALTER TABLE `commercial_club` ADD remark varchar(1000) DEFAULT '' COMMENT '商家备注';
+ALTER TABLE `commercial_club` ADD principal varchar(20) DEFAULT '' COMMENT '商家负责人';
+ALTER TABLE `commercial_club` ADD license varchar(250) DEFAULT '黄.png' COMMENT '商家证件(营业执照)';
 
 CREATE TABLE `commercial_clubuserinfo` (
     `id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY , 
