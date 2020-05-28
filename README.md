@@ -98,6 +98,7 @@ ALTER TABLE `commercial_club` ADD env_images varchar(4096) DEFAULT '' COMMENT '�
 ALTER TABLE `commercial_club` ADD remark varchar(1000) DEFAULT '' COMMENT '商家备注';
 ALTER TABLE `commercial_club` ADD principal varchar(20) DEFAULT '' COMMENT '商家负责人';
 ALTER TABLE `commercial_club` ADD license varchar(250) DEFAULT '黄.png' COMMENT '商家证件(营业执照)';
+ALTER TABLE `commercial_club` ADD update_avatar varchar(500) DEFAULT '' COMMENT '商户自己上传的头像, 不要在 admin 中修改或添加';
 
 CREATE TABLE `commercial_clubuserinfo` (
     `id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY , 

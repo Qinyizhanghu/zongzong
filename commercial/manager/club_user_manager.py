@@ -158,7 +158,7 @@ def build_club_detail_info(club_id):
     assert club is not None
 
     return {
-        'avatar': club.avatar.url,
+        'avatar': club.update_avatar or club.avatar.url,
         'name': club.name,
         'address': club.address,
         'telephone': club.telephone,
@@ -168,3 +168,14 @@ def build_club_detail_info(club_id):
         'license': club.license.url,
         'remark': club.remark
     }
+
+
+def club_update_detail(avatar_url, club_id):
+    """
+    商户更新自己的头像
+    """
+    club = get_club_by_id_db(club_id)
+    assert club is not None
+
+    club.update_avatar = avatar_url
+    club.save()

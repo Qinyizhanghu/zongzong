@@ -27,6 +27,7 @@ class Club(models.Model):
     # V2 中添加
     principal = models.CharField(max_length=20, verbose_name='商家负责人')
     license = models.ImageField(verbose_name='商家证件(营业执照)', blank=True, null=True)
+    update_avatar = models.CharField(max_length=500, default='', verbose_name='商户自己上传的头像, 不要在 admin 中修改或添加')
 
     # @zhanghu
     env_images = models.CharField(max_length=4096, verbose_name='环境图, 最多支持8张, 分号隔开')
