@@ -2,6 +2,7 @@ from geopy.distance import geodesic
 
 import datetime
 from api.manager.positon_manager import user_location_container, activity_location_container
+from commercial.const import CouponTemplateChoices
 from commercial.manager.db_manager import get_commercial_activities_by_ids_db
 from footprint.manager.footprint_manager import get_footprints_by_ids_db, is_user_favored
 from footprint.models import FlowType
@@ -96,7 +97,7 @@ def get_nearby_activity(lon, lat, radius=7):
     return result
 
 
-def build_footprint_for_flow(footprint, user_id, lon, lat):
+def build_footprint_for_flow(footprint, user_id, lon, lat, user):
     return {
         'flow_id': footprint.id, 'flow_type': FlowType.FOOTPRINT, 'avatar': footprint.avatar,
         'name': footprint.name, 'distance': geodesic((lat, lon), (footprint.lat, footprint.lon)).meters,
@@ -106,7 +107,23 @@ def build_footprint_for_flow(footprint, user_id, lon, lat):
         'user_id': footprint.user_id,
         'favored': is_user_favored(user_id, footprint.id, FlowType.FOOTPRINT),
         'favor_num': footprint.favor_num,
-        'post_type': footprint.post_type
+        'post_type': footprint.post_type,
+        'coupon_template':
+            {} if footprint.post_type == 'note' else build_coupon_template_info(user, footprint.template_id)
+    }
+
+
+def build_coupon_template_info(user, template_id):
+    """
+    构造优惠券模板信息
+    """
+    from commercial.manager.db_manager import get_coupon_template_by_id_db
+    from footprint.manager.coupon_manager import get_user_coupon_count
+    template = get_coupon_template_by_id_db(template_id)
+    return {
+        'name': template.club.name,
+        'has_count': get_user_coupon_count(user, template),
+        'coupon_type': u'普适券' if template.template_type == CouponTemplateChoices.GENERAL else u'满减券'
     }
 
 
@@ -120,10 +137,11 @@ def build_activity_for_flow(activity, user_id, lon, lat):
         'image_list': activity.image_list,
         'favored': is_user_favored(user_id, activity.id, FlowType.ACTIVITY),
         'favor_num': activity.favor_num,
+        'post_type': 'activity',
     }
 
 
-def build_flows_detail(flows, user_id, lon, lat):
+def build_flows_detail(flows, user_id, lon, lat, user):
     """
     构建事件流详情，需要针对足迹和活动分别build
     """
@@ -131,7 +149,7 @@ def build_flows_detail(flows, user_id, lon, lat):
     activity_flows = filter(lambda item: item.flow_type == FlowType.ACTIVITY, flows)
     footprints = get_footprints_by_ids_db([item.flow_id for item in footprint_flows])
     activities = get_commercial_activities_by_ids_db([item.flow_id for item in activity_flows])
-    footprint_details = [build_footprint_for_flow(footprint, user_id, lon, lat) for footprint in footprints]
+    footprint_details = [build_footprint_for_flow(footprint, user_id, lon, lat, user) for footprint in footprints]
     activity_details = [build_activity_for_flow(activity, user_id, lon, lat) for activity in activities]
     total_flow = footprint_details + activity_details
     return sorted(total_flow, key=lambda flow: flow['post_time'], reverse=True)
