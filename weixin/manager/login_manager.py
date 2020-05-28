@@ -110,3 +110,23 @@ def get_wechat_mini_session_by_code(code, timeout=SYNC_REQUEST_TIME_OUT):
     content = requests.get(url, timeout=timeout).content
     json_result = json.loads(content)
     return WechatMiniResultCodeToSession(json_result)
+
+
+def get_wechat_mini_session_by_code_for_club(code, timeout=SYNC_REQUEST_TIME_OUT):
+    """
+    小程序专用，通过code置换session
+
+    参考链接：
+    * code2Session，https://developers.weixin.qq.com/miniprogram/dev/api/open-api/login/code2Session.html
+    :param code:
+    :param timeout:
+    :return:
+    """
+    url = WEIXIN_MINI_CODE_TO_SESSION.format(**{
+        "app_id": 'wx543aba2d0ec781c9',
+        "secret": '47c44081dbd141406433bb58f83b9602',
+        "code": code
+    })
+    content = requests.get(url, timeout=timeout).content
+    json_result = json.loads(content)
+    return WechatMiniResultCodeToSession(json_result)

@@ -1,7 +1,13 @@
 # -*- encoding:utf-8 -*-
+
+
+import json
+
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
+from commercial.manager.club_user_manager import club_user_login
+from user_info.manager.user_info_mananger import get_user_info_by_user_id_db
 from utilities.request_utils import get_data_from_request
 from utilities.response import json_http_error, json_http_success
 from weixin.manager.weixin_mini_manager import wx_mini_request_login, WxminiAuthManager
@@ -34,3 +40,35 @@ def login_and_get_session_id_view(request):
         return json_http_error('invalid user')
     wx_mini_request_login(request, user, session_key)
     return json_http_success({"sessionid": request.session.session_key})
+
+
+@csrf_exempt
+@require_POST
+def club_user_login_view(request):
+    """
+    商家用户登录
+    由于不需要商户的 "其他信息", 所以, 前端值传递 code 也是可以的
+    URL[POST]: /weixin/club/get_session_id/
+    """
+    post_data = get_data_from_request(request)
+    account = post_data['account']
+    password = post_data['password']
+    code = post_data.get('code')
+
+    if code:
+        user, session_key = WxminiAuthManager.sync_wx_mini_user_info_for_club(code)
+    # 使用form表单携带账户和密码进行登录
+    else:
+        return json_http_error('缺少参数')
+
+    # 如果之前这个用户登录过踪踪用户端, 那么, 这个 UserInfo 表对象也是有的
+    user_info = get_user_info_by_user_id_db(user.id)
+    user_info.extra_info = json.loads(user_info.extra_info).update({'is_club': 1})  # 记录下用于商户登录的信息
+    user_info.save()
+
+    club_user_info = club_user_login(account, password, user_info)
+
+    if not club_user_info:
+        return json_http_error(u'用户名或密码错误')
+
+    return json_http_success({'club_id': club_user_info.club.id, "sessionid": request.session.session_key})

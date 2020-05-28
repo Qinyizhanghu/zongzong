@@ -18,7 +18,7 @@ from user_info.manager.user_info_mananger import get_user_info_by_open_id_db, cr
     get_user_by_open_id_db
 from utilities.enum import EnumBase
 from weixin.consts import APP_ID
-from weixin.manager.login_manager import get_wechat_mini_session_by_code
+from weixin.manager.login_manager import get_wechat_mini_session_by_code, get_wechat_mini_session_by_code_for_club
 from weixin.manager.mini_data_crypt import WechatMiniDataCryptV2, WXDataCryptErrorChoices
 
 
@@ -88,6 +88,24 @@ class WxminiAuthManager(object):
         return '', '', ''
 
     @classmethod
+    def get_wx_mini_user_simple_info_by_code_for_club(cls, code):
+        """
+        通过code获得用户的open_id，由于微信小程序的用户验证机制是自成体系的。所以单独实现一套
+        :return: (
+        open_id 用户唯一标识,
+        session_key 会话密钥,
+        union_id 不同公众号下用户唯一标识
+        )
+        """
+        try:
+            result = get_wechat_mini_session_by_code_for_club(code)
+            if not result.errcode:
+                return result.openid, result.session_key, result.unionid
+        except:
+            pass
+        return '', '', ''
+
+    @classmethod
     def sync_wx_mini_user_info(cls, code, encrypted_data, iv):
         """
         同步小程序用户信息
@@ -125,6 +143,22 @@ class WxminiAuthManager(object):
             'nickname': mini_user_info['nickName'],
             'headimgurl': mini_user_info['avatarUrl'],
         }
+
+    @classmethod
+    def sync_wx_mini_user_info_for_club(cls, code):
+        """
+        同步小程序用户信息
+        :return user, session_key
+        """
+        open_id, session_key, _ = cls.get_wx_mini_user_simple_info_by_code_for_club(code)
+        if not open_id or not session_key:
+            return None, ""
+
+        # 新建或者是获取一个 auth user (username 就是 open_id, 且 auth_user 的 username 是唯一的)
+        user, _ = get_user_by_open_id_db(open_id)
+        return user, session_key
+
+
 #
 #
 # class WxminiManager(object):
