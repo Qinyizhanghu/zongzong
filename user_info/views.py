@@ -25,9 +25,9 @@ def set_my_profile_view(request):
     avatar = post_data.get('avatar')
     location = post_data.get('location')
     nickname = post_data.get('nickname')
-    if not is_content_valid(nickname):
+    if nickname and not is_content_valid(nickname):
         return json_http_error(u'nickname 不合法')
-    if not is_image_valid(avatar):
+    if avatar and not is_image_valid(avatar):
         return json_http_error(u'avatar 不合法')
     birthday = post_data.get('birthday')
     wechat_no = post_data.get('wechat_no')
