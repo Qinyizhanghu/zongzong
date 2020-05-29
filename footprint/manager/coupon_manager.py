@@ -99,7 +99,7 @@ def build_user_coupon_info(coupon):
 
     return {
         'club_id': coupon.template.club.id,
-        'avatar': "http://zongz.cn" + coupon.template.club.avatar.url,
+        'avatar': "https://zongz.cn" + coupon.template.club.avatar.url,
         'club_name': coupon.template.club.name,
         'address': coupon.template.club.address,
         'coupon_id': coupon.id,
