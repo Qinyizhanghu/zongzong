@@ -49,7 +49,7 @@ def build_user_coupon_info_for_charge_off(club_id, coupon_code):
 
     return {
         'club_info': {
-            'avatar': club.avatar.url,
+            'avatar': "http://zongz.cn" + club.avatar.url,
             'name': club.name,
             'address': club.address,
             'telephone': club.telephone,
@@ -113,7 +113,7 @@ def build_club_consume_user_coupon_info(club_id):
 
     return {
         'club_info': {
-            'avatar': club.avatar.url,
+            'avatar': "http://zongz.cn" + club.avatar.url,
             'name': club.name,
             'address': club.address,
             'telephone': club.telephone,
@@ -158,7 +158,7 @@ def build_club_detail_info(club_id):
     assert club is not None
 
     return {
-        'avatar': club.update_avatar or club.avatar.url,
+        'avatar': club.update_avatar or "http://zongz.cn" + club.avatar.url,
         'name': club.name,
         'address': club.address,
         'telephone': club.telephone,

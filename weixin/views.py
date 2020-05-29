@@ -92,7 +92,9 @@ def club_user_login_view(request):
 
     # 如果之前这个用户登录过踪踪用户端, 那么, 这个 UserInfo 表对象也是有的
     user_info = get_user_info_by_user_id_db(user.id)
-    user_info.extra_info = json.loads(user_info.extra_info).update({'is_club': 1})  # 记录下用于商户登录的信息
+    user_extra_info = json.loads(user_info.extra_info)
+    user_extra_info.update({'is_club': 1})
+    user_info.extra_info = json.dumps(user_extra_info)
     user_info.save()
 
     club_user_info = club_user_login(account, password, user_info)

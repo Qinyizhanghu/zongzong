@@ -126,7 +126,7 @@ def build_footprint_info_for_explore(user, footprint):
 
         coupon_template = {
             'club_id': template.club_id,
-            'avatar': template.club.avatar.url,
+            'avatar': "http://zongz.cn" + template.club.avatar.url,
             'club_name': template.club.name,
             'address': template.club.address,
             'template_id': template.id,

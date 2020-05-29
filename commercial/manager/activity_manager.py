@@ -41,7 +41,7 @@ def build_nearby_club_info(club, lon, lat):
         "club_id": club.id,
         "name": club.name,
         "address": club.address,
-        "avatar": str(club.avatar),
+        "avatar": "http://zongz.cn" + club.avatar.url,
         "distance": haversine(lon, lat, club.lon, club.lat),
         'lon': club.lon,
         'lat': club.lat
@@ -73,7 +73,7 @@ def get_template_id_by_club(club):
 
 def build_club_info(club):
     return {
-        'avatar': club.avatar,
+        'avatar': "http://zongz.cn" + club.avatar.url,
         'name': club.name,
         'address': club.address,
         'telephone': club.telephone,
@@ -126,7 +126,7 @@ def build_activity_detail(activity, user_id):
         'top_image': activity.top_image.url,
         'title': activity.name,
         'club_name': club.name,
-        'avatar': club.avatar.url,
+        'avatar': "http://zongz.cn" + club.avatar.url,
         'telephone': club.telephone,
         'introduction': activity.introduction,
         'detail': activity.detail,
@@ -182,7 +182,7 @@ def build_coupon_template_info(template):
 
     return {
         'club_id': template.club_id,
-        'avatar': template.club.avatar,
+        'avatar': "http://zongz.cn" + template.club.avatar.url,
         'club_name': template.club.name,
         'address': template.club.address,
         'template_id': template.id,
@@ -208,7 +208,7 @@ def build_club_activity_confirm_info(club_id, is_confirm):
 
     return {
         'club_info': {
-            'avatar': club.avatar,
+            'avatar': "http://zongz.cn" + club.avatar.url,
             'name': club.name,
             'address': club.address,
             'telephone': club.telephone,
