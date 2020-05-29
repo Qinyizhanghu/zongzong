@@ -57,7 +57,7 @@ def build_activity_info(activity, position):
     return {
         'activity_id': activity.id,
         'name': activity.name,
-        'avatar': str(activity.club.avatar),
+        'avatar': "http://zongz.cn" + activity.club.avatar.url,
         'quota': '【{}/{}】'.format(activity.participant_num, activity.total_quota),
         'description': activity.description,
         'lat': position[1],
@@ -131,7 +131,7 @@ def build_coupon_template_info(user, template_id):
 def build_activity_for_flow(activity, user_id, lon, lat):
     club = activity.club
     return {
-        'flow_id': activity.id, 'flow_type': FlowType.ACTIVITY, 'avatar': club.avatar.url,
+        'flow_id': activity.id, 'flow_type': FlowType.ACTIVITY, 'avatar': "http://zongz.cn" + club.avatar.url,
         'name': club.name, 'distance': geodesic((lat, lon), (activity.lat, activity.lon)).meters,
         'location': activity.address,
         'post_time': datetime_to_str(activity.created_time), 'content': activity.introduction,

@@ -186,7 +186,7 @@ def get_club_activities_info(request):
 
     return json_http_success({'activity_list': [build_activity_brief_info(activity, request.user.id, lon, lat) for
                                                 activity in activities],
-                              'avatar': club.avatar})
+                              'avatar': "http://zongz.cn" + club.avatar.url})
 
 
 @csrf_exempt
