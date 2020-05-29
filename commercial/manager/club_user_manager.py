@@ -167,7 +167,8 @@ def build_club_detail_info(club_id):
         'principal': club.principal,
         'representative': club.representative,
         'license': "https://zongz.cn" + club.license.url,
-        'remark': club.remark
+        'remark': club.remark,
+        'business_type': club.business_type
     }
 
 
