@@ -126,6 +126,18 @@ def get_user_coupon_by_template(user, template):
     return UserCoupon.objects.filter(user=user, template=template, is_used=False)
 
 
+def get_user_coupon_by_id(coupon_id):
+    """
+    根据 id 获取用户优惠券
+    :param coupon_id:
+    :return:
+    """
+    try:
+        return UserCoupon.objects.get(id=coupon_id)
+    except UserCoupon.DoesNotExist:
+        return None
+
+
 def get_user_coupon_by_coupon_code(coupon_code):
     """
     根据优惠券码获取优惠券

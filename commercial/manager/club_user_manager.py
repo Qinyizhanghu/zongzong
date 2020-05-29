@@ -13,7 +13,7 @@ from commercial.manager.db_manager import get_club_by_account_and_password, crea
     get_club_by_id_db, get_club_user_info_by_user_info_and_club, get_club_user_info_by_club, \
     get_charge_off_record_by_club_user_infos
 from commercial.models import CouponChargeOffRecord
-from footprint.manager.coupon_manager import get_user_coupon_by_coupon_code, charge_off_coupon
+from footprint.manager.coupon_manager import get_user_coupon_by_coupon_code, charge_off_coupon, get_user_coupon_by_id
 from user_info.manager.user_info_mananger import get_user_info_by_user_id_db
 from utilities.date_time import datetime_to_str
 
@@ -135,11 +135,12 @@ def build_club_consume_infos(charge_off_records):
     consume_infos = []
 
     for record in charge_off_records:
-        coupon_money = 0 if record.coupon.template.template_type == CouponTemplateChoices.GENERAL \
-            else record.coupon.template.money
+        coupon = get_user_coupon_by_id(record.coupon_id)
+        coupon_money = 0 if coupon.template.template_type == CouponTemplateChoices.GENERAL \
+            else coupon.template.money
         consume_infos.append(
             {
-                'nickname': get_user_info_by_user_id_db(record.coupon.user_id).nickname,
+                'nickname': get_user_info_by_user_id_db(coupon.user_id).nickname,
                 'coupon_money': coupon_money,
                 'confirm_user': record.club_user.user_info.nickname,
                 'confirm_time': datetime_to_str(record.created_time, '%m-%d %H:%M')
