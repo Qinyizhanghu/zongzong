@@ -7,6 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
 from commercial.manager.club_user_manager import club_user_login
+from commercial.manager.db_manager import get_club_user_info_by_user_info
 from user_info.manager.user_info_mananger import get_user_info_by_user_id_db
 from utilities.request_utils import get_data_from_request
 from utilities.response import json_http_error, json_http_success
@@ -44,11 +45,39 @@ def login_and_get_session_id_view(request):
 
 @csrf_exempt
 @require_POST
+def club_user_get_session_id_view(request):
+    """
+    商家用户使用 code 去换取 sessionid
+    URL[POST]: /weixin/club/get_session_id/
+    """
+    post_data = get_data_from_request(request)
+    code = post_data.get('code')
+
+    if code:
+        user, session_key = WxminiAuthManager.sync_wx_mini_user_info_for_club(code)
+    else:
+        return json_http_error('缺少参数')
+
+    user_info = get_user_info_by_user_id_db(user.id)
+    club_user_info = get_club_user_info_by_user_info(user_info)
+    wx_mini_request_login(request, user, session_key)
+
+    if not club_user_info.exists():
+        return json_http_success({"sessionid": request.session.session_key})
+
+    if club_user_info.count() > 1:
+        return json_http_error(u'多用户商户错误')
+
+    return json_http_success({'club_id': club_user_info[0].club.id, "sessionid": request.session.session_key})
+
+
+@csrf_exempt
+@require_POST
 def club_user_login_view(request):
     """
     商家用户登录
     由于不需要商户的 "其他信息", 所以, 前端值传递 code 也是可以的
-    URL[POST]: /weixin/club/get_session_id/
+    URL[POST]: /weixin/club/login/
     """
     post_data = get_data_from_request(request)
     account = post_data['account']
@@ -71,4 +100,5 @@ def club_user_login_view(request):
     if not club_user_info:
         return json_http_error(u'用户名或密码错误')
 
+    wx_mini_request_login(request, user, session_key)
     return json_http_success({'club_id': club_user_info.club.id, "sessionid": request.session.session_key})

@@ -35,6 +35,10 @@ def get_club_by_account_and_password(account, password):
         return None
 
 
+def get_club_user_info_by_user_info(user_info):
+    return ClubUserInfo.objects.filter(user_info=user_info)
+
+
 def get_club_user_info_by_user_info_and_club(user_info, club):
     try:
         return ClubUserInfo.objects.get(user_info=user_info, club=club)
