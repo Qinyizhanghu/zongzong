@@ -103,7 +103,7 @@ def post_footprint_view(request):
 
     if latitude and longitude:
         add_user_location(footprint.id, longitude, latitude)
-    return json_http_success()
+    return json_http_success({'footprint_id': footprint.id})
 
 
 @login_required
