@@ -34,6 +34,7 @@ class FakeUser(object):
 def read_excel(excel_path='/root/workspace/excel/users.xlsx'):
     """
     读 excel 文件
+    注意: 到时候写入 fake user 的时候, 在 BaseUserInfo 的 extra_info 里面记录下这是个 fake 的 user --> 先检查下有没有执行过
     :param excel_path:
     :return:
     """
