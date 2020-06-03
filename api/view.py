@@ -18,10 +18,10 @@ def hello_view(request):
     return json_http_response('welcome to zongzong! ')
 
 
-@require_GET
+# @require_GET
 def get_nearby_activities_view(request):
     """
-    URL[GET]: /api/get_nearby_activities/
+    URL[GET]: https://zongz.cn//api/get_nearby_activities/?lat=28.67307&lon=121.44297
     :return: {
         user_locations: [
             {user_id, name, avatar, time, lat, lon}
