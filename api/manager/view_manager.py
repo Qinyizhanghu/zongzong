@@ -9,7 +9,7 @@ from footprint.models import FlowType
 from utilities.date_time import time_format, datetime_to_str, total_seconds
 
 
-def build_footprint_info(footprint, position):
+def build_footprint_info(footprint, position, lon, lat):
     return {
         'footprint_id': footprint.id,
         'time': time_format(footprint.created_time),
@@ -18,7 +18,8 @@ def build_footprint_info(footprint, position):
         'name': footprint.name,
         'avatar': footprint.avatar,
         'lat': position[1],
-        'lon': position[0]
+        'lon': position[0],
+        'distance': geodesic((lat, lon), (position[1], position[0])).meters
     }
 
 
@@ -80,10 +81,54 @@ def get_nearby_activity(lon, lat, radius=7):
     footprints = get_footprints_by_ids_db([int(item) for item in user_locations])
 
     # V2 新增两个需求: 7天以内的, 同一个用户3km范围内发布多条时，自动取消发布时间比较旧的状态
-    result = {
-        'footprints': [build_footprint_info(footprint, footprint_id_2_position.get(footprint.id))
-                       for footprint in footprints]
-    }
+    # result = {
+    #     'footprints': [build_footprint_info(footprint, footprint_id_2_position.get(footprint.id), lon, lat)
+    #                    for footprint in footprints]
+    # }
+
+    # footprints 还需要再做处理, 2KM 以内发布多条的话, 折叠起来
+    footprints_ = [build_footprint_info(footprint, footprint_id_2_position.get(footprint.id), lon, lat)
+                   for footprint in footprints]
+    footprints_ = sorted(footprints_, key=lambda foot: foot['distance'], reverse=True)
+
+    if len(footprints_) <= 1:
+        result = {'footprints': footprints_}
+    else:
+
+        bucket_footprint = []
+
+        for i in range(0, len(footprints_)):
+            if i == 0:
+                bucket_footprint.append([footprints_[i]])
+            elif i == (len(footprints_) - 1) and i != 0:
+                if bucket_footprint[-1][0]['distance'] - footprints_[i]['distance'] <= 2:
+                    bucket_footprint[-1].append(footprints_[i])
+                else:
+                    bucket_footprint.append([footprints_[i]])
+            else:
+                if bucket_footprint[-1][0]['distance'] - footprints_[i]['distance'] <= 2:
+                    bucket_footprint[-1].append(footprints_[i])
+                else:
+                    bucket_footprint.append([footprints_[i]])
+
+        result_footprints = []
+        result_fold = []
+
+        for single_bucket in bucket_footprint:
+            if len(single_bucket) == 1:
+                result_footprints.append(single_bucket[0])
+            elif len(single_bucket) > 1:
+                result_fold.append({
+                    'count': len(single_bucket),
+                    'lat': single_bucket[0]['lat'],
+                    'lon': single_bucket[0]['lon']
+                })
+
+        result = {
+            'footprints': result_footprints,
+            'fold': result_fold
+        }
+
     # 构建企业活动相关
     activity_locations = activity_location_container.get_members_within_radius(lon, lat, radius)
     positions = user_location_container.get_position(*activity_locations)
