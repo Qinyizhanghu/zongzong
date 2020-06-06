@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 
+from footprint.manager.coupon_manager import UserNewCouponManager
 from user_info.manager.user_info_mananger import update_my_profile_db, get_user_info_by_user_id_db, \
     get_user_brief_profile
 from utilities.content_check import is_content_valid
@@ -61,6 +62,7 @@ def get_my_profile_view(request):
         'show_wechat_no': user_info.show_wechat_no,
         'signature': user_info.signature,
         'user_id': request.user.id,
+        'has_new_coupon': UserNewCouponManager.get_new_coupon(user_info.id)
     }
     return json_http_success(result)
 
