@@ -283,6 +283,12 @@ def convert_to_datetime_str(value):
     return value
 
 
+def message_time_format(message_time):
+    if is_today(message_time):
+        return datetime_to_str(message_time, FORMAT_HOUR_MIN)
+    return datetime_to_str(message_time, FORMAT_MONTH)
+
+
 ############################################
 # 时间戳处理
 ############################################
