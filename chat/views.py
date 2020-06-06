@@ -123,4 +123,6 @@ def get_conversation_detail_view(request):
     else:
         return json_http_error('参数错误')
     result = build_conversation_list(request.user.id, conversation_id, conversation_info, msg_id, get_new)
+    # 清除 badge
+    ConversationMessageManager.clear_badge(request.user.id, conversation_id)
     return json_http_success(result)
