@@ -164,6 +164,17 @@ def fix_total_flow_and_user_location():
         add_user_location(footprint.id, footprint.lon, footprint.lat)
 
     total_flows = TotalFlow.objects.filter(flow_id__in=footprint_ids)
+
+    print('has footprint: %s' % len(footprints))
+    print('has total_flows: %s' % len(total_flows))
+
+    count = 0
+
     for flow in total_flows:
         flow.created_time = footprints_dict[flow.flow_id].created_time
         flow.save()
+
+        count += 1
+
+        if count % 100 == 0:
+            print('processed total flows %s' % count)
