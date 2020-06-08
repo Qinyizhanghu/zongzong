@@ -134,5 +134,5 @@ def random_lat_and_lon():
     return random.uniform(lat_range[0], lat_range[1]), random.uniform(lon_range[0], lon_range[1])
 
 
-read_excel_for_stage_one_user_data('/Users/zhanghu05/QinyiZhang/zongzong/stage_1_user_data.xlsx')
+# read_excel_for_stage_one_user_data('/Users/zhanghu05/QinyiZhang/zongzong/stage_1_user_data.xlsx')
 # read_excel_for_stage_one_user('/Users/zhanghu05/QinyiZhang/zongzong/stage_1_user_data.xlsx')
