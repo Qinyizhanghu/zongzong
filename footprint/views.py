@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET, require_POST
 
-from api.manager.positon_manager import add_user_location
+from api.manager.positon_manager import add_user_location, remove_user_location
 from commercial.manager.activity_manager import get_template_id_by_club, build_coupon_template_info
 from commercial.manager.db_manager import get_club_by_id_db, get_coupon_template_by_id_db
 from commercial.manager.explore_surplus_times_manager import ExploreSurplusTimesManager
@@ -158,6 +158,8 @@ def user_delete_footprint_view(request):
 
     footprint.is_deleted = True
     footprint.save()
+    # 用户删除足迹时, 清掉缓存信息
+    remove_user_location(footprint_id)
     return json_http_success({})
 
 
