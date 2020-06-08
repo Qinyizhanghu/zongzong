@@ -105,14 +105,25 @@ class ImportFootprintToDB(object):
                 random_user = user_data_dict['f'][random.randint(0, len(user_data_dict['f']) - 1)]
 
             user, created = get_or_create_user_db(random_user.open_id)
+
             if created:
-                user_info = UserBaseInfo.objects.create(
-                    user=user, open_id=random_user.open_id,
-                    nickname=username, avatar=random_user.avatar,
-                    signature=random_user.signature,
-                    sex=SexChoices.MALE if anyone.gender == '男' else SexChoices.FEMALE,
-                    extra_info=json.dumps({'fake_user': 1})
-                )
+                try:
+                    user_info = UserBaseInfo.objects.create(
+                        user=user, open_id=random_user.open_id,
+                        nickname=username, avatar=random_user.avatar,
+                        signature=random_user.signature,
+                        sex=SexChoices.MALE if anyone.gender == '男' else SexChoices.FEMALE,
+                        extra_info=json.dumps({'fake_user': 1})
+                    )
+                except Exception as e:
+                    user_info = UserBaseInfo.objects.create(
+                        user=user, open_id=random_user.open_id,
+                        nickname=username, avatar=random_user.avatar,
+                        signature='今天天气不错',
+                        sex=SexChoices.MALE if anyone.gender == '男' else SexChoices.FEMALE,
+                        extra_info=json.dumps({'fake_user': 1})
+                    )
+                    print('create userinfo has some error: %s' % e)
 
             for footprint in user_footprint_map[username]:
                 # 这里最重要的工作是获取到 footprint 对应的 image_list, 且最多9张
