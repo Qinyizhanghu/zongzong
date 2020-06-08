@@ -18,7 +18,7 @@ from footprint.manager.footprint_manager import create_footprint_db, add_favor_d
     build_footprint_list_info
 from footprint.manager.next_explore_post_manager import get_next_explore_template, get_next_explore_footprint, \
     build_footprint_info_for_explore
-from footprint.models import FlowType, PostType, UserCoupon, CouponAcquireWay
+from footprint.models import FlowType, PostType, UserCoupon, CouponAcquireWay, TotalFlow
 from user_info.manager.user_info_mananger import get_user_info_by_user_id_db
 from utilities.content_check import is_content_valid
 from utilities.date_time import datetime_to_str, FORMAT_DATE_WITHOUT_SEPARATOR
@@ -160,6 +160,10 @@ def user_delete_footprint_view(request):
     footprint.save()
     # 用户删除足迹时, 清掉缓存信息
     remove_user_location(footprint_id)
+    try:
+        TotalFlow.objects.get(flow_id=footprint_id, flow_type=FlowType.FOOTPRINT).delete()
+    except Exception as e:
+        print(e)
     return json_http_success({})
 
 
