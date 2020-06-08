@@ -12,10 +12,11 @@ import json
 import os
 import random
 
+from api.manager.positon_manager import add_user_location
 from commercial.util.stage_1_user_data import read_excel_for_stage_one_user_data, read_excel_for_stage_one_user, \
     random_lat_and_lon
 from footprint.manager.footprint_manager import create_footprint_db
-from footprint.models import PostType
+from footprint.models import PostType, Footprint, TotalFlow
 from user_info.consts import SexChoices
 from user_info.manager.user_info_mananger import get_or_create_user_db
 from user_info.models import UserBaseInfo
@@ -142,5 +143,27 @@ class ImportFootprintToDB(object):
                     footprint_.created_time = footprint.post_date
                     footprint_.last_modified = footprint.post_date
                     footprint_.save()
+                    # 添加经纬度
+                    add_user_location(footprint.id, lon, lat)
                 except Exception as e:
                     print('create footprint has some error: %s' % e)
+
+
+def fix_total_flow_and_user_location():
+    """
+    修复 TotalFlow 表中的时间, 用户位置
+    :return:
+    """
+    footprint_ids = []
+    footprints_dict = {}
+    footprints = Footprint.objects.filter(id__gte=7519)
+
+    for footprint in footprints:
+        footprints_dict[footprint.id] = footprint
+        footprint_ids.append(footprint.id)
+        add_user_location(footprint.id, footprint.lon, footprint.lat)
+
+    total_flows = TotalFlow.objects.filter(flow_id__in=footprint_ids)
+    for flow in total_flows:
+        flow.created_time = footprints_dict[flow.flow_id].created_time
+        flow.save()
