@@ -124,6 +124,9 @@ class ImportFootprintToDB(object):
 
                 lat, lon = random_lat_and_lon()
 
-                create_footprint_db(
-                    user.id, footprint.message, lat, lon, None, image_list, 0, PostType.NOTE, 0
-                )
+                try:
+                    create_footprint_db(
+                        user.id, footprint.message, lat, lon, None, image_list, 0, PostType.NOTE, 0
+                    )
+                except Exception as e:
+                    print('create footprint has some error: %s' % e)
