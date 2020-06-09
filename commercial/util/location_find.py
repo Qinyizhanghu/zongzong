@@ -3,6 +3,11 @@ import requests
 from footprint.models import Footprint
 
 
+"""
+地理位置相关: https://zhuanlan.zhihu.com/p/111679535
+"""
+
+
 def location_to_address(location):
     """
     将经纬度转换为地址
