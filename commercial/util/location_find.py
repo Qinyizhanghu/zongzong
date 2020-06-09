@@ -33,11 +33,9 @@ def filling_location_to_footprint():
 
     for footprint in footprints:
         try:
-            if footprint.location:
-                continue
             lon_lat = '%s,%s' % (footprint.lon, footprint.lat)
             location = location_to_address(lon_lat)
-            footprint.location = location
+            footprint.location = location[1]
             footprint.save()
         except Exception as e:
             print('filling location error: %s' % e)
